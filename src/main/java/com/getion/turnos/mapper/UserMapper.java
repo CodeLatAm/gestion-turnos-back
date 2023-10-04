@@ -1,6 +1,8 @@
 package com.getion.turnos.mapper;
 
+import com.getion.turnos.model.entity.ProfileEntity;
 import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.request.ProfileRequest;
 import com.getion.turnos.model.request.RegisterRequest;
 import com.getion.turnos.model.response.LoginResponse;
 import com.getion.turnos.model.response.RegisterResponse;
@@ -39,6 +41,21 @@ public class UserMapper {
                 .lastname(user.getLastname())
                 .name(user.getName())
                 .token(jwt)
+                .build();
+    }
+
+    public ProfileEntity mapToProfileRequest(ProfileRequest request) {
+        return ProfileEntity.builder()
+                .city(request.getCity())
+                .phone(request.getPhone())
+                .domicile(request.getDomicile())
+                .mat_nac(request.getMat_nac())
+                .mat_prov(request.getMat_prov())
+                .province(request.getProvince())
+                .presentation(request.getPresentation())
+                .specialty(request.getSpecialty())
+                .whatsapp(request.getWhatsapp())
+                .city(request.getCity())
                 .build();
     }
 }

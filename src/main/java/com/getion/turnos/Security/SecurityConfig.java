@@ -53,6 +53,7 @@ public class SecurityConfig {
                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                .requestMatchers(HttpMethod.GET, "/test/accessUser").hasAnyAuthority("PROFESSIONAL")
                .requestMatchers(HttpMethod.GET, "/test/accessAdmin").hasAnyAuthority("ADMIN")
+               .requestMatchers(HttpMethod.POST, "/profile/{id}").permitAll()
                .anyRequest().permitAll();
        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

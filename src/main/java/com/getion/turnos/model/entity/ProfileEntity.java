@@ -3,11 +3,13 @@ package com.getion.turnos.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "profile")
@@ -16,13 +18,13 @@ public class ProfileEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String lastname;
-    private String title;
-    private String email;
+    //private String name;
+    //private String lastname;
+    //private String title;
+    //private String email;
     @NotBlank(message = "El domicilio es requerido")
     private String domicile;
-    private String country;
+    //private String country;
     @NotBlank(message = "El telefono es requerido")
     private String phone;
     @NotBlank(message = "La provincia es requerida")
