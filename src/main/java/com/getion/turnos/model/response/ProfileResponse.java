@@ -1,18 +1,17 @@
-package com.getion.turnos.model.request;
+package com.getion.turnos.model.response;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileRequest {
+public class ProfileResponse {
 
+    private Long id;
     private String name;
     private String lastname;
     private String title;

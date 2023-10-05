@@ -56,6 +56,9 @@ public class UserMapper {
                 .specialty(request.getSpecialty())
                 .whatsapp(request.getWhatsapp())
                 .city(request.getCity())
+                .name(request.getName())
+                .lastname(request.getLastname())
+                .title(request.getTitle())
                 .build();
     }
 }
