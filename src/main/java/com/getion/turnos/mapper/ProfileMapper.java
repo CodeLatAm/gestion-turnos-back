@@ -21,6 +21,7 @@ public class ProfileMapper {
                 .presentation(profile.getPresentation())
                 .mat_nac(profile.getMat_nac())
                 .mat_prov(profile.getMat_prov())
+                .province(profile.getProvince())
                 .build();
     }
 }
