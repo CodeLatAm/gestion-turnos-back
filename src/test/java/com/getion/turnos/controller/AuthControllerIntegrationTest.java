@@ -2,8 +2,12 @@ package com.getion.turnos.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.getion.turnos.model.request.LoginRequest;
 import com.getion.turnos.model.request.RegisterRequest;
 
+import com.getion.turnos.model.response.LoginResponse;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,7 +63,7 @@ public class AuthControllerIntegrationTest {
     }
     @Test
     public void testRegisterFailure() throws Exception {
-        RegisterRequest request = createRegisterRequest();
+        RegisterRequest request = this.createRegisterRequest();
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -75,9 +80,6 @@ public class AuthControllerIntegrationTest {
                     String content = result.getResponse().getContentAsString();
                     assertThat(content).contains("El Profesional ya esta registrado");
                 });
-
-
-
     }
 
     private RegisterRequest createRegisterRequest() {
@@ -89,6 +91,52 @@ public class AuthControllerIntegrationTest {
                 .username("abel@gmail.com")
                 .password("12345678")
                 .build();
+    }
+
+    @Test
+    public void correctLogin() throws Exception {
+        RegisterRequest request = this.createRegisterRequest();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+        LoginRequest loginRequest = this.createLoginRequest();
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        // Deserializar la respuesta JSON en un objeto LoginResponse
+        String content = result.getResponse().getContentAsString();
+        LoginResponse loginResponse = objectMapper.readValue(content, LoginResponse.class);
+
+        // Verificar los atributos del objeto LoginResponse
+        assertThat(loginResponse.getId()).isEqualTo(1L);
+        assertThat(loginResponse.getName()).isEqualTo("Abel"); // Reemplaza con el valor esperado
+        assertThat(loginResponse.getLastname()).isEqualTo("Acevedo"); // Reemplaza con el valor esperado
+        assertThat(loginResponse.getRole()).isEqualTo("[PROFESSIONAL]"); // Reemplaza con el valor esperado
+        assertThat(loginResponse.getToken()).isNotNull();
+        assertThat(loginResponse.getMessage()).isEqualTo("Logueo exitoso"); // Reemplaza con el valor esperado
+
+        /*private Long id;
+        private String name;
+        private String lastname;
+        private String role;
+        private String token;
+        private String message;*/
+
+    }
+
+    private LoginRequest createLoginRequest() {
+        return LoginRequest.builder()
+                .username("abel@gmail.com")
+                .password("12345678")
+                .build();
+
     }
 
 
