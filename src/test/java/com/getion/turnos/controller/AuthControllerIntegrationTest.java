@@ -1,13 +1,11 @@
 package com.getion.turnos.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getion.turnos.model.request.LoginRequest;
 import com.getion.turnos.model.request.RegisterRequest;
 
 import com.getion.turnos.model.response.LoginResponse;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +93,7 @@ public class AuthControllerIntegrationTest {
 
     @Test
     public void correctLogin() throws Exception {
-        RegisterRequest request = this.createRegisterRequest();
+        RegisterRequest request = this.createRegisterRequestLogin();
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/auth/register")
@@ -115,6 +113,7 @@ public class AuthControllerIntegrationTest {
         LoginResponse loginResponse = objectMapper.readValue(content, LoginResponse.class);
 
         // Verificar los atributos del objeto LoginResponse
+
         assertThat(loginResponse.getId()).isEqualTo(1L);
         assertThat(loginResponse.getName()).isEqualTo("Abel"); // Reemplaza con el valor esperado
         assertThat(loginResponse.getLastname()).isEqualTo("Acevedo"); // Reemplaza con el valor esperado
@@ -122,18 +121,22 @@ public class AuthControllerIntegrationTest {
         assertThat(loginResponse.getToken()).isNotNull();
         assertThat(loginResponse.getMessage()).isEqualTo("Logueo exitoso"); // Reemplaza con el valor esperado
 
-        /*private Long id;
-        private String name;
-        private String lastname;
-        private String role;
-        private String token;
-        private String message;*/
+    }
 
+    private RegisterRequest createRegisterRequestLogin() {
+        return RegisterRequest.builder()
+                .name("Abel")
+                .lastname("Acevedo")
+                .country("ARG")
+                .title("DR")
+                .username("abel2@gmail.com")
+                .password("12345678")
+                .build();
     }
 
     private LoginRequest createLoginRequest() {
         return LoginRequest.builder()
-                .username("abel@gmail.com")
+                .username("abel2@gmail.com")
                 .password("12345678")
                 .build();
 
