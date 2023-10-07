@@ -1,5 +1,6 @@
 package com.getion.turnos.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getion.turnos.model.request.RegisterRequest;
 
@@ -55,4 +56,40 @@ public class AuthControllerIntegrationTest {
 
 
     }
+    @Test
+    public void testRegisterFailure() throws Exception {
+        RegisterRequest request = createRegisterRequest();
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+        // Intentar registrar al mismo usuario nuevamente (esto debería generar un fallo)
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect( result -> {
+                    String content = result.getResponse().getContentAsString();
+                    assertThat(content).contains("El Profesional ya esta registrado");
+                });
+
+
+
+    }
+
+    private RegisterRequest createRegisterRequest() {
+        return RegisterRequest.builder()
+                .name("Abel")
+                .lastname("Acevedo")
+                .country("ARG")
+                .title("DR")
+                .username("abel@gmail.com")
+                .password("12345678")
+                .build();
+    }
+
+
 }
