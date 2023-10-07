@@ -21,7 +21,7 @@ public class ProfileController {
     public ResponseEntity<MessageResponse> create(@PathVariable Long id, @Valid @RequestBody ProfileRequest request){
         profileService.save(id, request);
         String message = "Perfil creado";
-        return ResponseEntity.ok(new MessageResponse(HttpStatus.CREATED, message));
+        return ResponseEntity.ok(new MessageResponse(HttpStatus.OK, message));
     }
 
     @GetMapping("/{userId}")
