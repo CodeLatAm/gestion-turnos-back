@@ -18,10 +18,9 @@ public class ProfileEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //private String name;
-    //private String lastname;
-    //private String title;
-    //private String email;
+    private String name;
+    private String lastname;
+    private String title;
     @NotBlank(message = "El domicilio es requerido")
     private String domicile;
     //private String country;

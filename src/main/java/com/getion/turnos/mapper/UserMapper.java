@@ -41,6 +41,7 @@ public class UserMapper {
                 .lastname(user.getLastname())
                 .name(user.getName())
                 .token(jwt)
+                .message("Logueo exitoso")
                 .build();
     }
 
@@ -56,6 +57,9 @@ public class UserMapper {
                 .specialty(request.getSpecialty())
                 .whatsapp(request.getWhatsapp())
                 .city(request.getCity())
+                .name(request.getName())
+                .lastname(request.getLastname())
+                .title(request.getTitle())
                 .build();
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -35,11 +36,13 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     @Override
     public RegisterResponse register(RegisterRequest request) {
         Optional<UserEntity> userEntity = userRepository.findByUsername(request.getUsername());
         if(userEntity.isPresent()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El Profesional ya esta registrado");
+
         }
         UserEntity user = userMapper.mapToAuthRequest(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
