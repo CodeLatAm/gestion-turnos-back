@@ -6,6 +6,7 @@ import com.getion.turnos.model.request.ProfileRequest;
 import com.getion.turnos.model.request.RegisterRequest;
 import com.getion.turnos.model.response.LoginResponse;
 import com.getion.turnos.model.response.RegisterResponse;
+import com.getion.turnos.model.response.UserResponse;
 import lombok.Builder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -60,6 +61,15 @@ public class UserMapper {
                 .name(request.getName())
                 .lastname(request.getLastname())
                 .title(request.getTitle())
+                .build();
+    }
+
+    public UserResponse mapToUserResponse(UserEntity userEntity) {
+        return UserResponse.builder()
+                .name(userEntity.getName())
+                .lastname(userEntity.getLastname())
+                .country(userEntity.getCountry())
+                .title(userEntity.getTitle())
                 .build();
     }
 }
