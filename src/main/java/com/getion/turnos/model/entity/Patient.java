@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,5 +33,8 @@ public class Patient {
     private String address;
     private String profession;
     private String email;
+    @ManyToMany(mappedBy = "patientSet")
+    private Set<HealthCenter> healthCenters;
+
 
 }

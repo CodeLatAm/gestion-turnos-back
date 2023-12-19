@@ -25,5 +25,9 @@ public class Turn {
     @ManyToOne
     @JoinColumn(name = "patient_id") // Nombre de la columna que actúa como clave foránea en la tabla de turnos
     private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")  // Nombre de la columna que actúa como clave foránea en la tabla de turnos
+    private Schedule schedule;
+
 
 }

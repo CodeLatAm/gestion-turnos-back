@@ -19,7 +19,14 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Turn> turnList;
-    
+    @OneToOne
+    @JoinColumn(name = "health_center_id")  // Nombre de la columna que actúa como clave foránea en la tabla de agendas
+    private HealthCenter healthCenter;
+
+    public void addTurn(Turn turn){
+        turnList.add(turn);
+    }
 
 }
