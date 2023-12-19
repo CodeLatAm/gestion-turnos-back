@@ -31,5 +31,6 @@ public class Patient {
     private String province;
     private String address;
     private String profession;
+    private String email;
 
 }
