@@ -57,8 +57,8 @@ public class AuthControllerIntegrationTest {
         assertThat(content).contains("token");
         assertThat(content).contains("Registro exitoso");
 
-
     }
+
     @Test
     public void testRegisterFailure() throws Exception {
         RegisterRequest request = this.createRegisterRequest();

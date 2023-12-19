@@ -30,6 +30,7 @@ public class UserEntity{
     private String username; //email
     private String password;
     private String country;
+    private String specialty;
     //private Perfil perfil;
     //private Set<HealthCenters> centers;
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class, cascade = CascadeType.PERSIST)

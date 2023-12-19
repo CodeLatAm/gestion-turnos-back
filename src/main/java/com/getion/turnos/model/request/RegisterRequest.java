@@ -28,4 +28,6 @@ public class RegisterRequest {
     private String password;
     @NotBlank(message = "El pais es requerido")
     private String country;
+    @NotBlank(message = "La especialidad es requerida")
+    private String specialty;
 }

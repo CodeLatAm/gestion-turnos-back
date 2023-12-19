@@ -24,6 +24,7 @@ public class UserMapper {
                 .username(request.getUsername())
                 .title(request.getTitle())
                 .lastname(request.getLastname())
+                .specialty(request.getSpecialty())
                 .build();
     }
 
