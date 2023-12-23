@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -19,6 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name ="users")
 public class UserEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,8 +32,9 @@ public class UserEntity{
     private String username; //email
     private String password;
     private String country;
-    //private Perfil perfil;
-    //private Set<HealthCenters> centers;
+    private String specialty;
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private Set<HealthCenter> centers = new HashSet<>();
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles;
@@ -39,5 +42,8 @@ public class UserEntity{
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ProfileEntity profile;
 
+    public void addCenter(HealthCenter center){
+        centers.add(center);
+    }
 
 }

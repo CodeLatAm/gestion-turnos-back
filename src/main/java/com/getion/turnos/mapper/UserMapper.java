@@ -6,6 +6,7 @@ import com.getion.turnos.model.request.ProfileRequest;
 import com.getion.turnos.model.request.RegisterRequest;
 import com.getion.turnos.model.response.LoginResponse;
 import com.getion.turnos.model.response.RegisterResponse;
+import com.getion.turnos.model.response.UserResponse;
 import lombok.Builder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ public class UserMapper {
                 .username(request.getUsername())
                 .title(request.getTitle())
                 .lastname(request.getLastname())
+                .specialty(request.getSpecialty())
                 .build();
     }
 
@@ -31,7 +33,6 @@ public class UserMapper {
                 .message("Registro exitoso")
                 .build();
     }
-
 
     public LoginResponse mapToLoginResponse(UserEntity user, String jwt) {
 
@@ -60,6 +61,15 @@ public class UserMapper {
                 .name(request.getName())
                 .lastname(request.getLastname())
                 .title(request.getTitle())
+                .build();
+    }
+
+    public UserResponse mapToUserResponse(UserEntity userEntity) {
+        return UserResponse.builder()
+                .name(userEntity.getName())
+                .lastname(userEntity.getLastname())
+                .country(userEntity.getCountry())
+                .title(userEntity.getTitle())
                 .build();
     }
 }

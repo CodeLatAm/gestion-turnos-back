@@ -27,8 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Optional;
-import java.util.Set;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,7 +66,7 @@ public class ProfileControllerIntegrationTest {
     }
     @Test
     public void createProfileUser() throws Exception {
-        // Crea un usuario para usar en las pruebas
+
         UserEntity user = createUserForTest();
 
         ProfileRequest request = this.createProfileRequest();

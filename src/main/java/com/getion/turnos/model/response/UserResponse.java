@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterResponse {
+@AllArgsConstructor
+@Builder
+public class UserResponse {
 
-    private String token;
-    private String message;
-
+    private String name;
+    private String lastname;
+    private String country;
+    private String title;
 }
