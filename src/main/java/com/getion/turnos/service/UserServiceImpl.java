@@ -2,6 +2,7 @@ package com.getion.turnos.service;
 
 import com.getion.turnos.exception.UserNotFoundException;
 import com.getion.turnos.mapper.UserMapper;
+import com.getion.turnos.model.entity.ProfileEntity;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.response.UserResponse;
 import com.getion.turnos.repository.UserRepository;
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
 
     @Override
     public UserEntity findById(Long id) {

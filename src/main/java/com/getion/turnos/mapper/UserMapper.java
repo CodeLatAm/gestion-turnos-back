@@ -34,7 +34,6 @@ public class UserMapper {
                 .build();
     }
 
-
     public LoginResponse mapToLoginResponse(UserEntity user, String jwt) {
 
         return LoginResponse.builder()

@@ -11,8 +11,11 @@ import com.getion.turnos.repository.ProfileRepository;
 import com.getion.turnos.service.injectionDependency.ProfileService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +27,14 @@ public class ProfileServiceImp implements ProfileService {
     private final ProfileMapper profileMapper;
 
 
+    @Transactional
     @Override
     public void save(Long id, ProfileRequest request) {
         UserEntity userEntity = userService.findById(id);
+        if(profileRepository.existsByUser_Id(id)){
+            // Lanzar una excepción indicando que el perfil ya existe
+            throw new DataIntegrityViolationException("Profile already exists for user with id: " + id);
+        }
         ProfileEntity profile = userMapper.mapToProfileRequest(request);
         profile.setUser(userEntity);
         profileRepository.save(profile);

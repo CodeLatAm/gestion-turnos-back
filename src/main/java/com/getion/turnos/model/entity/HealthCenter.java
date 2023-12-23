@@ -18,6 +18,8 @@ import java.util.Set;
 @Table(name = "health_centers")
 public class HealthCenter {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String address;
