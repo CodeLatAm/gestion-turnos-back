@@ -29,4 +29,11 @@ public class ProfileController {
         ProfileResponse response = profileService.getProfile(userId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PutMapping("/{id}/{userId}")
+    public ResponseEntity<MessageResponse> update(@PathVariable Long id, @PathVariable Long userId, @Valid @RequestBody ProfileRequest request){
+        profileService.update(id, userId, request);
+        String message = "Perfil actualizado";
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, message));
+    }
 }

@@ -17,4 +17,4 @@ jwt:
     key: bH0JEkmI05NL/UQyBjER6xkckecLYnLVVg/UbvVumod3E9Nr3SbNxiPMOzFGL+Kd
   time:
     expiration: 86400000
-
+  accessTokenCookieName: AuthToken
