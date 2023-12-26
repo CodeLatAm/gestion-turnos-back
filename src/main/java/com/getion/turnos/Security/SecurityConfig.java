@@ -13,10 +13,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,7 +31,7 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final UsernameAndPasswordAuthenticationProvider usernameAndPasswordAuthenticationProvider;
-
+    //private final JwtEntryPoint jwtEntryPoint;
     private final JwtTokenFilter jwtTokenFilter;
 
    @Bean
@@ -45,21 +46,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http.httpBasic(httpBasic -> httpBasic.disable());
-       http.formLogin(formLogin -> formLogin.disable());
-       http.csrf(csrf -> csrf.disable());
-
-       http.authorizeRequests()
-               .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-               .requestMatchers(HttpMethod.GET, "/test/accessUser").hasAnyAuthority("PROFESSIONAL")
-               .requestMatchers(HttpMethod.GET, "/test/accessAdmin").hasAnyAuthority("ADMIN")
-               .requestMatchers(HttpMethod.POST, "/profile/**").permitAll()
-               .requestMatchers(HttpMethod.GET, "/profile/**").permitAll()
-               .requestMatchers(HttpMethod.GET,"/user/{id}").permitAll()
-               .anyRequest().permitAll();
-       http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-       http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-       return http.build();
+        http.httpBasic(httpBasic -> httpBasic.disable());
+        http.formLogin(formLogin -> formLogin.disable());
+        http.csrf(csrf -> csrf.disable());
+        http.authorizeRequests()
+                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/test/accessUser").hasAnyAuthority("PROFESSIONAL")
+                .requestMatchers(HttpMethod.GET, "/test/accessAdmin").hasAnyAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/profile/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/profile/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/user/{id}").permitAll()
+                .anyRequest().permitAll();
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
 
     }
 
@@ -72,10 +72,8 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setMaxAge(3600L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 }

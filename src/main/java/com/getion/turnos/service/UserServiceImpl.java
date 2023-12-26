@@ -41,6 +41,15 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
+    public Optional<UserEntity> getByUserName(String userName) {
+        Optional<UserEntity> user = userRepository.findByUsername(userName);
+        if(user.isEmpty()){
+            throw new UserNotFoundException("Usuario no encontrado");
+        }
+        return user;
+    }
+
     public Optional<UserEntity> findByUsername(String username) {
         Optional<UserEntity> user = userRepository.findByUsername(username);
         if(user.isEmpty()){

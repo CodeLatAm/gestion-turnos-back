@@ -11,4 +11,5 @@ public interface UserService {
     UserResponse findByIdUser(Long id);
 
 
+    Optional<UserEntity> getByUserName(String userName);
 }
