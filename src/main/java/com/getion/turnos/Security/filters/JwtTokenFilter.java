@@ -4,15 +4,18 @@ import com.getion.turnos.Security.jwt.JwtUtil;
 import com.getion.turnos.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
 
@@ -23,6 +26,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     private final CustomUserDetailsService customUserDetailsService;
+
+    @Value("${jwt.accessTokenCookieName}")
+    private String cookieName;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -35,6 +41,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         final String token = authorizationHeader.split(" ")[1].trim();
+        //final  String token = this.getToken(request);
         if (!jwtUtil.validate(token)) {
             filterChain.doFilter(request, response);
             return;
@@ -55,5 +62,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
 
+    }
+
+    private String getToken(HttpServletRequest request){
+        Cookie cookie = WebUtils.getCookie(request, cookieName);
+        return cookie != null ? cookie.getValue():null;
     }
 }

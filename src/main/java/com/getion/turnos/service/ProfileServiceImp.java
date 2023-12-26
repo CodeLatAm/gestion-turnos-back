@@ -1,6 +1,7 @@
 package com.getion.turnos.service;
 
 
+import com.getion.turnos.exception.ProfileNotFountException;
 import com.getion.turnos.mapper.ProfileMapper;
 import com.getion.turnos.mapper.UserMapper;
 import com.getion.turnos.model.entity.ProfileEntity;
@@ -60,5 +61,34 @@ public class ProfileServiceImp implements ProfileService {
 
         }
         return response;
+    }
+
+    @Override
+    public ProfileEntity createProfile(String name, String lastname, String title, String country, String specialty,
+                                       UserEntity user) {
+        ProfileEntity profile = new ProfileEntity();
+        profile.setName(name);
+        profile.setLastname(lastname);
+        profile.setTitle(title);
+        profile.setCountry(country);
+        profile.setSpecialty(specialty);
+        profile.setUser(user);
+        profileRepository.save(profile);
+        return profile;
+    }
+
+    @Transactional
+    @Override
+    public void update(Long id, Long userId, ProfileRequest request) {
+        UserEntity user = userService.findById(userId);
+        Optional<ProfileEntity> profile = profileRepository.findById(id);
+        if(profile.isEmpty() || profile == null){
+            throw new ProfileNotFountException(String.format("El perfil con id: %s no esta presente", id));
+        }
+        ProfileEntity existingProfile = profile.get();
+        profileMapper.updateProfileFromRequest(existingProfile, request);
+        // Suponiendo que hay una relación bidireccional entre UserEntity y ProfileEntity
+        user.setProfile(existingProfile);
+        profileRepository.save(existingProfile);
     }
 }
