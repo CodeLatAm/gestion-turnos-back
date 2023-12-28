@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/test/accessUser").hasAnyAuthority("PROFESSIONAL")
                 .requestMatchers(HttpMethod.GET, "/test/accessAdmin").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/profile/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/profile/{id}/profile/{userId}").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/user/{id}").permitAll()
                 .anyRequest().permitAll();

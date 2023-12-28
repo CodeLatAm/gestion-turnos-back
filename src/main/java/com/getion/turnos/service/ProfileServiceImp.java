@@ -45,21 +45,9 @@ public class ProfileServiceImp implements ProfileService {
     public ProfileResponse getProfile(Long userId) {
         ProfileResponse response = new ProfileResponse();
         UserEntity userEntity = userService.findById(userId);
-        if(userEntity.getProfile() == null){
-            ProfileEntity profileEntity = new ProfileEntity();
-            profileEntity.setName(userEntity.getName());
-            profileEntity.setLastname(userEntity.getLastname());
-            profileEntity.setTitle(userEntity.getTitle());
-            userEntity.setProfile(profileEntity);
-            response.setName(profileEntity.getName());
-            response.setLastname(profileEntity.getLastname());
-            response.setTitle(profileEntity.getTitle());
-
-        }else {
             ProfileEntity profile = userEntity.getProfile();
             response = profileMapper.mapToProfile(profile);
 
-        }
         return response;
     }
 

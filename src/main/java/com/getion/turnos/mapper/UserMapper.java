@@ -42,6 +42,7 @@ public class UserMapper {
                 .lastname(user.getLastname())
                 .name(user.getName())
                 .token(jwt)
+                .profileId(user.getProfile().getId())
                 .message("Logueo exitoso")
                 .build();
     }
