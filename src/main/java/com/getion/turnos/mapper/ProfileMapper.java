@@ -23,6 +23,7 @@ public class ProfileMapper {
                 .mat_nac(profile.getMat_nac())
                 .mat_prov(profile.getMat_prov())
                 .province(profile.getProvince())
+                .country(profile.getCountry())
                 .build();
     }
 
