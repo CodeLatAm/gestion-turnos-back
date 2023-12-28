@@ -16,21 +16,13 @@ public class ProfileResponse {
     private String lastname;
     private String title;
     private String domicile;
-    //private String country;
-
+    private String country;
     private String phone;
-
     private String province;
-
     private String city;
-
     private String whatsapp;
-
     private String specialty;
-
     private String mat_nac;
-
     private String mat_prov;
-
     private String presentation;
 }
