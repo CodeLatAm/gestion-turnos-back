@@ -2,15 +2,12 @@ package com.getion.turnos.model.entity;
 
 import com.getion.turnos.enums.DayOfWeekEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 @Entity
 @Table(name = "turns")
 public class Turn {

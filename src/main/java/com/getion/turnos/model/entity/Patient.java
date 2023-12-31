@@ -1,18 +1,15 @@
 package com.getion.turnos.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
 
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 @Entity
 @Table(name = "patients")
 public class Patient {
@@ -34,6 +31,6 @@ public class Patient {
     private String profession;
     private String email;
     @ManyToMany(mappedBy = "patientSet")
-    private Set<HealthCenter> healthCenters;
+    private Set<HealthCenterEntity> healthCenterEntities;
 
 }

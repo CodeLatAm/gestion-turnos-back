@@ -1,13 +1,17 @@
 package com.getion.turnos.service;
 
+import com.getion.turnos.exception.UserNotAuthenticatedException;
 import com.getion.turnos.exception.UserNotFoundException;
 import com.getion.turnos.mapper.UserMapper;
 import com.getion.turnos.model.entity.ProfileEntity;
 import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.response.CurrentUserResponse;
 import com.getion.turnos.model.response.UserResponse;
 import com.getion.turnos.repository.UserRepository;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -56,5 +60,19 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(String.format("El usuario con email %s no está registrado", username));
         }
         return user;
+    }
+
+    @Override
+    public CurrentUserResponse getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.isAuthenticated()){
+            throw new UserNotAuthenticatedException("Usuario no  autenticado");
+        }
+        Optional<UserEntity> user = userRepository.findByUsername(authentication.getName());
+        if(user.isEmpty()){
+            throw new UserNotFoundException(String.format("El usuario con email %s no está registrado", authentication.getName()));
+        }
+        CurrentUserResponse response = userMapper.mapToCurrentUser(user.get());
+        return response;
     }
 }
