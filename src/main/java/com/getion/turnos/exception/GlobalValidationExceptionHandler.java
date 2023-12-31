@@ -54,4 +54,14 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleProfileNotFountException(ProfileNotFountException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<String> handleUserNotAuthenticatedException(UserNotAuthenticatedException ex){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(HealthCenterAlreadyExistException.class)
+    public ResponseEntity<String> handleHealthCenterAlreadyExistException(HealthCenterAlreadyExistException ex) {
+        return  ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }

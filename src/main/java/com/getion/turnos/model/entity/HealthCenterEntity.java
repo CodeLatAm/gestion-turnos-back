@@ -1,37 +1,36 @@
 package com.getion.turnos.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 @Entity
 @Table(name = "health_centers")
-public class HealthCenter {
+public class HealthCenterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String address;
+    private String phone;
+    private String email;
+    private String specialty;
     @OneToOne(mappedBy = "healthCenter", cascade = CascadeType.ALL)
-    private Schedule schedule;
+    private Schedule schedule = new Schedule();
     @ManyToMany
     @JoinTable(
             name = "health_center_patient",
             joinColumns = @JoinColumn(name = "health_center_id"),
             inverseJoinColumns = @JoinColumn(name = "patient_id")
     )
-    private Set<Patient> patientSet = new HashSet<>();
+    private List<Patient> patientSet = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;

@@ -4,13 +4,14 @@ import com.getion.turnos.model.entity.ProfileEntity;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.request.ProfileRequest;
 import com.getion.turnos.model.request.RegisterRequest;
+import com.getion.turnos.model.response.CurrentUserResponse;
 import com.getion.turnos.model.response.LoginResponse;
 import com.getion.turnos.model.response.RegisterResponse;
 import com.getion.turnos.model.response.UserResponse;
 import lombok.Builder;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Builder
@@ -71,6 +72,16 @@ public class UserMapper {
                 .lastname(userEntity.getLastname())
                 .country(userEntity.getCountry())
                 .title(userEntity.getTitle())
+                .build();
+    }
+
+
+    public CurrentUserResponse mapToCurrentUser(UserEntity user) {
+        return CurrentUserResponse.builder()
+                .name(user.getName())
+                .lastname(user.getLastname())
+                .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 }
