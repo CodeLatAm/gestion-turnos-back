@@ -19,7 +19,7 @@ public class HealthCenterController {
 
     private final HealthCenterService healthCenterService;
 
-    @PostMapping("/{id}")
+    @PostMapping("/user/{id}")
     public ResponseEntity<MessageResponse> createCenter(@PathVariable Long id, @Valid @RequestBody HealthCenterRequest request){
         healthCenterService.createCenter(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse(HttpStatus.CREATED,"Centro medico creado"));
