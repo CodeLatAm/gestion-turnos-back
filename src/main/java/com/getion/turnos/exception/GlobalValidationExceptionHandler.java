@@ -64,4 +64,9 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleHealthCenterAlreadyExistException(HealthCenterAlreadyExistException ex) {
         return  ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
+    @ExceptionHandler(HealthCenterNotFoundException.class)
+    public ResponseEntity<String> handleHealthCenterNoFoundException(HealthCenterNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }
