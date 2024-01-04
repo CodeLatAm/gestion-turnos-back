@@ -1,6 +1,7 @@
 package com.getion.turnos.service;
 
 import com.getion.turnos.exception.HealthCenterAlreadyExistException;
+import com.getion.turnos.exception.HealthCenterNotFoundException;
 import com.getion.turnos.mapper.HealthCenterMapper;
 import com.getion.turnos.model.entity.HealthCenterEntity;
 import com.getion.turnos.model.entity.Schedule;
@@ -36,16 +37,21 @@ public class HealthCenterServiceImpl implements HealthCenterService {
         healthCenter.setUserEntity(user);
         healthCenter.setSchedule(schedule);
         schedule.setHealthCenter(healthCenter);
-        // Verificar si el HealthCenter ya existe en la base de datos por nombre y dirección
-        Optional<HealthCenterEntity> existingHealthCenter = healthCenterRepository.findByNameAndAddress(
-                healthCenter.getName(),
-                healthCenter.getAddress()
-        );
-
+        Optional<HealthCenterEntity> existingHealthCenter = healthCenterRepository.findByName(healthCenter.getName());
         if (existingHealthCenter.isPresent()) {
             throw new HealthCenterAlreadyExistException("Este centro ya existe.");
         }
         user.addCenter(healthCenter);
         healthCenterRepository.save(healthCenter);
+    }
+
+    @Override
+    public HealthCenterEntity finByName(String centerName) {
+        Optional<HealthCenterEntity> center = healthCenterRepository.findByName(centerName);
+        if(center.isEmpty()){
+            log.error("Centro no encontrado: " + centerName );
+            throw new HealthCenterNotFoundException("Centro no encontrado: " + centerName );
+        }
+        return center.get();
     }
 }
