@@ -8,6 +8,7 @@ import com.getion.turnos.model.entity.Schedule;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.request.HealthCenterRequest;
 import com.getion.turnos.model.request.ProfileRequest;
+import com.getion.turnos.model.response.HealthCenterNamesResponse;
 import com.getion.turnos.repository.HealthCenterRepository;
 import com.getion.turnos.service.injectionDependency.HealthCenterService;
 import com.getion.turnos.service.injectionDependency.UserService;
@@ -16,7 +17,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Log4j2
 @Service
@@ -49,9 +52,16 @@ public class HealthCenterServiceImpl implements HealthCenterService {
     public HealthCenterEntity finByName(String centerName) {
         Optional<HealthCenterEntity> center = healthCenterRepository.findByName(centerName);
         if(center.isEmpty()){
-            log.error("Centro no encontrado: " + centerName );
+            log.error("Centro no encontrado: ", centerName );
             throw new HealthCenterNotFoundException("Centro no encontrado: " + centerName );
         }
         return center.get();
+    }
+
+    @Override
+    public Set<HealthCenterNamesResponse> getAllCentersName(Long userId) {
+        UserEntity user = userService.findById(userId);
+        Set<HealthCenterNamesResponse> responses = healthCenterMapper.mapToCenters(user.getCenters());
+        return responses;
     }
 }

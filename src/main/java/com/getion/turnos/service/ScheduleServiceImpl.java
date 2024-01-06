@@ -17,7 +17,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public HealthCenterEntity finByName(String centerName) {
-        Optional<HealthCenterEntity> schedule = scheduleRepository.findByName(centerName);
+
         return null;
     }
 }

@@ -57,6 +57,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/users/me").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/centers/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/centers/user/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/centers/user/{userId}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/days/create").permitAll()
                 .anyRequest().permitAll();
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
