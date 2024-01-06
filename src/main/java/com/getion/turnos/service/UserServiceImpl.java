@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public UserEntity findById(Long id) {
         Optional<UserEntity> user = userRepository.findById(id);
         if(user.isEmpty()){
-            //throw new UserNotFoundException("No se encontró un usuario con el ID: " + id);
+            log.info(String.format("No se encontró un usuario con el ID: %s ", id));
             throw new UserNotFoundException(String.format("No se encontró un usuario con el ID: %s ", id));
         }
 
