@@ -2,8 +2,11 @@ package com.getion.turnos.model.entity;
 
 import com.getion.turnos.enums.DayOfWeekEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Setter
@@ -19,8 +22,8 @@ public class BusinessHours {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String centerName;
-    @Enumerated(EnumType.STRING)
-    private DayOfWeekEnum day;
+    private String day;
+    private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     @ManyToOne()

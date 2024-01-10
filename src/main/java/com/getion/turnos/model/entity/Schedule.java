@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Setter @Getter
@@ -17,6 +18,7 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Date date;
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Turn> turnList = new ArrayList<>();
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -69,4 +69,9 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleHealthCenterNoFoundException(HealthCenterNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(BusinessHourAlreadyInUseException.class)
+    public ResponseEntity<String> handleBusinessHourAlreadyInUseException(BusinessHourAlreadyInUseException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }
