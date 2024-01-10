@@ -23,6 +23,7 @@ public class BusinessHours {
     private Long id;
     private String centerName;
     private String day;
+    private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     @ManyToOne()

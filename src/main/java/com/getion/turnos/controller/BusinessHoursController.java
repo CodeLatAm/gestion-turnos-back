@@ -31,4 +31,5 @@ public class BusinessHoursController {
         List<BusinessHoursResponse> responses = businessHoursService.getAllBusinessHoursBy(centerName);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
+
 }
