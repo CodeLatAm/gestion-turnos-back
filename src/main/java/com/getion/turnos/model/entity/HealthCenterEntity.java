@@ -24,19 +24,16 @@ public class HealthCenterEntity {
     private String specialty;
     @OneToOne(mappedBy = "healthCenter", cascade = CascadeType.ALL)
     private Schedule schedule = new Schedule();
-    @ManyToMany
-    @JoinTable(
-            name = "health_center_patient",
-            joinColumns = @JoinColumn(name = "health_center_id"),
-            inverseJoinColumns = @JoinColumn(name = "patient_id")
-    )
+    @OneToMany()
     private List<Patient> patientSet = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     public void addPatient(Patient patient){
-        patientSet.add(patient);
+        if(!patientSet.contains(patient)) {
+            patientSet.add(patient);
+        }
     }
 
 

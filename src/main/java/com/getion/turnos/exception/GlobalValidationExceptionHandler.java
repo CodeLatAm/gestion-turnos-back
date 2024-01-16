@@ -74,4 +74,9 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleBusinessHourAlreadyInUseException(BusinessHourAlreadyInUseException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
+    @ExceptionHandler(PatientAlreadyExistExceptions.class)
+    public ResponseEntity<String> handlePatientAlreadyExistExceptions(PatientAlreadyExistExceptions ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }

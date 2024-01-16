@@ -4,6 +4,7 @@ import com.getion.turnos.enums.DayOfWeekEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter @Setter
@@ -19,13 +20,13 @@ public class Turn {
     private Long id;
     //@Enumerated(EnumType.STRING)
     //private DayOfWeekEnum dayOfWeek;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate date;
+    private String hour;
     @ManyToOne
-    @JoinColumn(name = "patient_id") // Nombre de la columna que actúa como clave foránea en la tabla de turnos
+    @JoinColumn(name = "patient_id")
     private Patient patient;
     @ManyToOne
-    @JoinColumn(name = "schedule_id")  // Nombre de la columna que actúa como clave foránea en la tabla de turnos
+    @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
 }

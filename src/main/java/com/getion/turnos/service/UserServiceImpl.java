@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
             log.info(String.format("No se encontró un usuario con el ID: %s ", id));
             throw new UserNotFoundException(String.format("No se encontró un usuario con el ID: %s ", id));
         }
-
         return user.get();
     }
 
