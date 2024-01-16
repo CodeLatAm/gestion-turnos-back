@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,11 +31,10 @@ public class ProfileEntity{
     private String mat_nac;
     private String mat_prov;
     private String presentation;
-    //private TiposDeConsultas tipos;
-    //private Pago pago;
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
 
 
 }

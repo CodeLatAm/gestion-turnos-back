@@ -5,16 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class TurnResponse {
+@AllArgsConstructor
+public class DateEntityResponse {
 
+    private Long id;
+    private String day;
 
-    private Date startDate;
-    private Date endDate;
-    private PatientResponse patientResponse;
 }

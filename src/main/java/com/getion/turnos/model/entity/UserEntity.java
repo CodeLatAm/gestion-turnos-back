@@ -28,18 +28,22 @@ public class UserEntity{
     private String password;
     private String country;
     private String specialty;
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<HealthCenterEntity> centers = new HashSet<>();
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<RoleEntity> roles;
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ProfileEntity profile;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Patient> patientSet = new HashSet<>();
 
     public void addCenter(HealthCenterEntity center){
         centers.add(center);
     }
 
-
+    public void addPatient(Patient patient){
+        patientSet.add(patient);
+        patient.setUser(this);
+    }
 }
