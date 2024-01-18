@@ -32,6 +32,7 @@ public class Patient {
     private String email;
     private String dni;
     private String plan;
+    private String age;
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private UserEntity user;

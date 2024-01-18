@@ -38,5 +38,5 @@ public class PatientRequest {
     @NotBlank(message = "El DNI no puede estar en blanco")
     @Pattern(regexp = "^[0-9]{8}$", message = "El formato del DNI es inválido")
     private String dni;
-
+    private String age;
 }

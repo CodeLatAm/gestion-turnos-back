@@ -14,14 +14,13 @@ import java.util.Date;
 @Entity
 @Table(name = "turns")
 public class Turn {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //@Enumerated(EnumType.STRING)
-    //private DayOfWeekEnum dayOfWeek;
+    private String centerName;
     private LocalDate date;
     private String hour;
+    private boolean availability;
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;

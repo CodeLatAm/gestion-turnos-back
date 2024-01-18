@@ -5,6 +5,7 @@ import com.getion.turnos.mapper.PatientMapper;
 import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.request.PatientRequest;
+import com.getion.turnos.model.response.PatientResponse;
 import com.getion.turnos.repository.PatientRepository;
 import com.getion.turnos.service.injectionDependency.PatientService;
 import com.getion.turnos.service.injectionDependency.UserService;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Log4j2
 @Service
@@ -36,4 +39,12 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.save(patient);
 
     }
+
+    @Override
+    public List<PatientResponse> searchPatient(String term) {
+        List<Patient> patients = patientRepository.searchPatient(term);
+        List<PatientResponse> responses = patientMapper.mapToListPatients(patients);
+        return responses;
+    }
+
 }
