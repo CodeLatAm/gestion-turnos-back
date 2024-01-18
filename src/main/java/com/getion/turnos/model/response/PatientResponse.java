@@ -13,4 +13,10 @@ public class PatientResponse {
 
     private String name;
     private String surname;
+    private String age;
+    private String healthInsurance;
+    private String dni;
+
+
+
 }

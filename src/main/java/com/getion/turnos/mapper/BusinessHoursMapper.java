@@ -28,11 +28,16 @@ public class BusinessHoursMapper {
     }
 
     private BusinessHoursResponse mapToBusinessHourResponse(BusinessHours businessHours) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        // Formatear las horas y eliminar los dos últimos ceros
+        String startTime = businessHours.getStartTime().format(formatter);
+        String endTime = businessHours.getEndTime().format(formatter);
+
         return BusinessHoursResponse.builder()
                 .id(businessHours.getId())
                 .centerName(businessHours.getCenterName())
-                .startTime(businessHours.getStartTime())
-                .endTime(businessHours.getEndTime())
+                .startTime(startTime)
+                .endTime(endTime)
                 .day(businessHours.getDay())
                 .build();
     }

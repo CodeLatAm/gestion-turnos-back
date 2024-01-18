@@ -29,7 +29,7 @@ import java.util.Optional;
 public class BusinessHoursServiceImpl implements BusinessHoursService {
 
     private final BusinessHoursRepository businessHoursRepository;
-    private final ScheduleService scheduleService;
+    //private final ScheduleService scheduleService;
     private final HealthCenterService healthCenterService;
     private final BusinessHoursMapper businessHoursMapper;
 
