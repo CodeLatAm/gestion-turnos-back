@@ -1,11 +1,10 @@
 package com.getion.turnos.model.entity;
 
-import com.getion.turnos.enums.DayOfWeekEnum;
+import com.getion.turnos.enums.ShiftStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Getter @Setter
 @NoArgsConstructor
@@ -20,7 +19,9 @@ public class Turn {
     private String centerName;
     private LocalDate date;
     private String hour;
+    private String patientDni;
     private boolean availability;
+    private ShiftStatus shiftStatus;
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
