@@ -19,4 +19,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
             "OR LOWER(p.surname) LIKE LOWER(concat('%', :term, '%')) " +
             "OR LOWER(p.dni) LIKE LOWER(concat('%', :term, '%'))")
     List<Patient> searchPatient(@Param("term") String term);
+
+    Patient findByDni(String dni);
 }

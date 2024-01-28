@@ -11,8 +11,10 @@ import com.getion.turnos.service.injectionDependency.PatientService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -42,9 +44,17 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<PatientResponse> searchPatient(String term) {
+        if(term.equals("")){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "La busqueda no puede estar vacia");
+        }
         List<Patient> patients = patientRepository.searchPatient(term);
         List<PatientResponse> responses = patientMapper.mapToListPatients(patients);
         return responses;
+    }
+
+    @Override
+    public Patient findByDni(String dni) {
+        return patientRepository.findByDni(dni);
     }
 
 }

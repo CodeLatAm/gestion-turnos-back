@@ -46,7 +46,7 @@ public class GlobalValidationExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
+    public ResponseEntity<String> handleUserNotFoundExceptionN(UserNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
@@ -77,6 +77,10 @@ public class GlobalValidationExceptionHandler {
 
     @ExceptionHandler(PatientAlreadyExistExceptions.class)
     public ResponseEntity<String> handlePatientAlreadyExistExceptions(PatientAlreadyExistExceptions ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    @ExceptionHandler(TurnConflictException.class)
+    public ResponseEntity<String> handleTurnConflictException(TurnConflictException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }
