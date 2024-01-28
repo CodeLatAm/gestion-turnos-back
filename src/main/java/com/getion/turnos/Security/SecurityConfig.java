@@ -13,11 +13,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -54,16 +51,23 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/test/accessUser").hasAnyAuthority("PROFESSIONAL")
                 .requestMatchers(HttpMethod.GET, "/test/accessAdmin").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/profile/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/profile/{id}/profile/{userId}").hasAnyAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/profile/{id}/profile/{userId}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/profile/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/user/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET,"/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/me").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/centers/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/centers/user/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/centers/user/{userId}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/days/create").permitAll()
+                .requestMatchers(HttpMethod.GET, "/days/centerName").permitAll()
+                .requestMatchers(HttpMethod.POST, "/patients/{userId}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/patients/term").permitAll()
                 .anyRequest().permitAll();
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
-
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

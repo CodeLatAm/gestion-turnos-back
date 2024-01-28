@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MessageResponse {
+public class DateEntityResponse {
 
-    private HttpStatus status;
-    private String message;
+    private Long id;
+    private String day;
 
 }

@@ -1,18 +1,22 @@
 package com.getion.turnos.model.response;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MessageResponse {
+public class BusinessHoursResponse {
 
-    private HttpStatus status;
-    private String message;
+    private Long id;
+    private String centerName;
+    private String day;
+    private String startTime;
+    private String endTime;
 
 }

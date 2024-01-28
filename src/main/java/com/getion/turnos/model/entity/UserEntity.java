@@ -1,19 +1,14 @@
 package com.getion.turnos.model.entity;
 
-import com.getion.turnos.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.*;
+import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,17 +28,22 @@ public class UserEntity{
     private String password;
     private String country;
     private String specialty;
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
-    private Set<HealthCenter> centers = new HashSet<>();
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<HealthCenterEntity> centers = new HashSet<>();
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<RoleEntity> roles;
-
+    private List<RoleEntity> roles;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ProfileEntity profile;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Patient> patientSet = new HashSet<>();
 
-    public void addCenter(HealthCenter center){
+    public void addCenter(HealthCenterEntity center){
         centers.add(center);
     }
 
+    public void addPatient(Patient patient){
+        patientSet.add(patient);
+        patient.setUser(this);
+    }
 }

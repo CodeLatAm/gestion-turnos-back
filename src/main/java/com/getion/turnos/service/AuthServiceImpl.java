@@ -4,6 +4,7 @@ package com.getion.turnos.service;
 import com.getion.turnos.Security.jwt.JwtUtil;
 import com.getion.turnos.Security.util.CookieUtil;
 import com.getion.turnos.enums.Role;
+import com.getion.turnos.exception.UserNotFoundException;
 import com.getion.turnos.mapper.UserMapper;
 import com.getion.turnos.model.entity.ProfileEntity;
 import com.getion.turnos.model.entity.RoleEntity;
@@ -30,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -59,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
         }
         UserEntity user = userMapper.mapToAuthRequest(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles(Set.of(RoleEntity.builder()
+        user.setRoles(List.of(RoleEntity.builder()
                         .name(Role.PROFESSIONAL)
                 .build()));
         ProfileEntity profileCreate = profileService.createProfile(request.getName(), request.getLastname(),request.getTitle(),
@@ -76,8 +79,14 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(HttpServletResponse httpServletResponse, LoginRequest request) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
-        Optional<UserEntity> user = userRepository.findByUsername(authentication.getName());
-        String jwt = jwtUtil.generate(request.getUsername());
-        return userMapper.mapToLoginResponse(user.get(), jwt);
+        Optional<UserEntity> userOptional = userRepository.findByUsername(authentication.getName());
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            String jwt = jwtUtil.generate(request.getUsername());
+            return userMapper.mapToLoginResponse(user, jwt);
+        } else {
+            // Manejar el caso en que el usuario no está presente en la base de datos
+            throw new UserNotFoundException("Usuario no encontrado");
+        }
     }
 }

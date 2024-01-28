@@ -1,32 +1,32 @@
 package com.getion.turnos.model.entity;
 
-import com.getion.turnos.enums.DayOfWeekEnum;
+import com.getion.turnos.enums.ShiftStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import java.time.LocalDate;
 
+
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 @Entity
 @Table(name = "turns")
 public class Turn {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private DayOfWeekEnum dayOfWeek;
-    private String startDate;
-    private String endDate;
+    private String centerName;
+    private LocalDate date;
+    private String hour;
+    private String patientDni;
+    private boolean availability;
+    private ShiftStatus shiftStatus;
     @ManyToOne
-    @JoinColumn(name = "patient_id") // Nombre de la columna que actúa como clave foránea en la tabla de turnos
+    @JoinColumn(name = "patient_id")
     private Patient patient;
     @ManyToOne
-    @JoinColumn(name = "schedule_id")  // Nombre de la columna que actúa como clave foránea en la tabla de turnos
+    @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
 }

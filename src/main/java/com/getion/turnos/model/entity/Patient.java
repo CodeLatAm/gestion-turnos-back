@@ -1,18 +1,15 @@
 package com.getion.turnos.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import java.time.LocalDate;
-import java.util.Set;
 
+
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 @Entity
 @Table(name = "patients")
 public class Patient {
@@ -23,8 +20,8 @@ public class Patient {
     private String name;
     private String surname;
     private String healthInsurance; //obra social
-    private String Genre;
-    private int affiliateNumber;
+    private String genre;
+    private String affiliateNumber;
     private LocalDate dateOfBirth;
     private String cellphone;
     private String landline;
@@ -33,7 +30,15 @@ public class Patient {
     private String address;
     private String profession;
     private String email;
-    @ManyToMany(mappedBy = "patientSet")
-    private Set<HealthCenter> healthCenters;
+    private String dni;
+    private String plan;
+    private String age;
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+    /*@ManyToOne
+    @JoinColumn(name = "health_center_id")
+    private HealthCenterEntity center;
+    */
 
 }

@@ -46,12 +46,41 @@ public class GlobalValidationExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
+    public ResponseEntity<String> handleUserNotFoundExceptionN(UserNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(ProfileNotFountException.class)
     public ResponseEntity<String> handleProfileNotFountException(ProfileNotFountException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<String> handleUserNotAuthenticatedException(UserNotAuthenticatedException ex){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(HealthCenterAlreadyExistException.class)
+    public ResponseEntity<String> handleHealthCenterAlreadyExistException(HealthCenterAlreadyExistException ex) {
+        return  ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(HealthCenterNotFoundException.class)
+    public ResponseEntity<String> handleHealthCenterNoFoundException(HealthCenterNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BusinessHourAlreadyInUseException.class)
+    public ResponseEntity<String> handleBusinessHourAlreadyInUseException(BusinessHourAlreadyInUseException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PatientAlreadyExistExceptions.class)
+    public ResponseEntity<String> handlePatientAlreadyExistExceptions(PatientAlreadyExistExceptions ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+    @ExceptionHandler(TurnConflictException.class)
+    public ResponseEntity<String> handleTurnConflictException(TurnConflictException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }

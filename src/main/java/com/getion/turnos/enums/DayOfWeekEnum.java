@@ -8,5 +8,7 @@ public enum DayOfWeekEnum {
     JUEVES,
     VIERNES,
     SÁBADO,
-    DOMINGO
+    DOMINGO,
+    LUNES_A_VIERNES,
+    LUNES_A_LUNES
 }
