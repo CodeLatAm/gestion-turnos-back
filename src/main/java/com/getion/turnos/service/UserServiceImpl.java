@@ -89,4 +89,5 @@ public class UserServiceImpl implements UserService {
         List<HealthCenterResponse> responses = userMapper.mapToList(user.get().getCenters());
         return responses;
     }
+
 }

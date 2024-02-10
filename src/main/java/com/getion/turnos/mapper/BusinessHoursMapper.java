@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -41,4 +42,27 @@ public class BusinessHoursMapper {
                 .day(businessHours.getDay())
                 .build();
     }
+
+    public Set<BusinessHoursResponse> mapToBusinessHorsSet(List<BusinessHours> businessHours) {
+        return businessHours
+                .stream()
+                .map(this::mapToBusinessHourSetResponse)
+                .collect(Collectors.toSet());
+    }
+
+    public BusinessHoursResponse mapToBusinessHourSetResponse(BusinessHours businessHours) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        // Formatear las horas y eliminar los dos últimos ceros
+        String startTime = businessHours.getStartTime().format(formatter);
+        String endTime = businessHours.getEndTime().format(formatter);
+        return BusinessHoursResponse.builder()
+                .id(businessHours.getId())
+                .centerName(businessHours.getCenterName())
+                .startTime(startTime)
+                .endTime(endTime)
+                .day(businessHours.getDay())
+                .build();
+    }
+
+
 }

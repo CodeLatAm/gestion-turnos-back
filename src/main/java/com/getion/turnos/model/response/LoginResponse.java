@@ -18,6 +18,7 @@ public class LoginResponse {
     private String token;
     private String message;
     private Long profileId;
+    private String userName;
 
     public LoginResponse(String message){
         this.message = message;

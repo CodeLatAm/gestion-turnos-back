@@ -15,6 +15,8 @@ import java.time.LocalTime;
 @Builder
 public class BusinessHoursRequest {
 
+    @NotNull(message = "El userId no puede ser null")
+    private Long userId;
     @NotBlank(message = "El nombre es requerido")
     private String centerName;
     @NotBlank(message = "El día es requerido")

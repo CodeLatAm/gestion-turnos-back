@@ -17,10 +17,11 @@ public class TurnosApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TurnosApplication.class, args);
-		System.out.println(generarFechasPorSemana(LocalDate.now(),LocalDate.of(2024,11,30)));
+		//System.out.println(generarFechasPorSemana(LocalDate.now(),LocalDate.of(2024,11,30)));
 
 
 	}
+	/*
 	public static List<String> generarFechasPorSemana(LocalDate fechaInicio, LocalDate fechaFin) {
 		List<String> fechasFormateadas = new ArrayList<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d/MM/yyyy");
@@ -37,7 +38,7 @@ public class TurnosApplication {
 
 		return fechasFormateadas;
 	}
-
+*/
 
 	@Bean
 	public BCryptPasswordEncoder getBCryptPasswordEncoder() {
