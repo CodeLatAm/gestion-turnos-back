@@ -41,9 +41,14 @@ public class HealthCenterServiceImpl implements HealthCenterService {
         Schedule schedule = new Schedule();
 
         scheduleRepository.save(schedule);
-        Optional<HealthCenterEntity> existingHealthCenter = healthCenterRepository.findByName(healthCenter.getName());
+        /*Optional<HealthCenterEntity> existingHealthCenter = healthCenterRepository.findByName(healthCenter.getName());
         if (existingHealthCenter.isPresent()) {
             System.out.println("Centro de salud existente encontrado: " + existingHealthCenter.get().getName());
+            throw new HealthCenterAlreadyExistException("Este centro ya existe.");
+        }*/
+        Optional<HealthCenterEntity> center = healthCenterRepository.findByNameAndUserEntity(healthCenter.getName(), user);
+        if (center.isPresent()) {
+            log.error("Centro de salud existente encontrado: " + center.get().getName() + "para este usuario");
             throw new HealthCenterAlreadyExistException("Este centro ya existe.");
         }
         healthCenter.setUserEntity(user);

@@ -1,19 +1,31 @@
 package com.getion.turnos.service;
 
+import com.getion.turnos.enums.ShiftStatus;
+import com.getion.turnos.exception.HealthCenterNotFoundException;
+import com.getion.turnos.exception.PatientNotFoundException;
 import com.getion.turnos.exception.TurnConflictException;
+import com.getion.turnos.exception.TurnNotFoundException;
 import com.getion.turnos.mapper.TurnMapper;
 import com.getion.turnos.model.entity.HealthCenterEntity;
 import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.entity.Turn;
+import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.response.TurnResponse;
 import com.getion.turnos.repository.TurnRepository;
 import com.getion.turnos.service.injectionDependency.HealthCenterService;
 import com.getion.turnos.service.injectionDependency.PatientService;
 import com.getion.turnos.service.injectionDependency.TurnService;
+import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,22 +35,94 @@ public class TurnServiceImpl implements TurnService {
     private final TurnMapper turnMapper;
     private final HealthCenterService healthCenterService;
     private final PatientService patientService;
+    private final UserService userService;
+
+    @Transactional
+    @Override
+    public void createPatientTurn(String centerName, LocalDate date, String hour, String dni, Long userId) {
+        UserEntity user = userService.findById(userId);
+        // Buscar el centro por nombre dentro del conjunto del usuario
+        Optional<HealthCenterEntity> healthCenterOptional = user.getCenters().stream()
+                .filter(center -> center.getName().equalsIgnoreCase(centerName))
+                .findFirst();
+        if (healthCenterOptional.isPresent()) {
+            HealthCenterEntity healthCenter = healthCenterOptional.get();
+            // Obtener el paciente del usuario por DNI
+            Optional<Patient> patientOptional = user.getPatientSet().stream()
+                    .filter(patient -> patient.getDni().equals(dni))
+                    .findFirst();
+            // Verificar si el paciente está asociado al usuario
+            if (patientOptional.isPresent()) {
+                Patient patient = patientOptional.get();
+                // Agregar el paciente al centro de salud
+                healthCenter.addPatient(patient);
+                // Crear el turno
+                Turn turn = new Turn();
+                turn.setDate(date);
+                turn.setHour(hour);
+                turn.setAvailability(false);
+                turn.setCenterName(centerName);
+                turn.setPatientDni(dni);
+                turn.setShiftStatus(ShiftStatus.ASIGNADO);
+                turn.setSchedule(healthCenter.getSchedule());
+                turn.setPatient(patient);
+                // Guardar el turno
+                turnRepository.save(turn);
+            } else {
+                // Manejar el caso donde el paciente no está asociado al usuario
+                throw new PatientNotFoundException("El paciente no está asociado al usuario");
+            }
+        } else {
+            throw new HealthCenterNotFoundException("Centro de salud no encontrado para el usuario con ID " + userId);
+        }
+    }
+    @Override
+    public List<TurnResponse> getAllTurns() {
+        List<Turn> turns = turnRepository.findAll();
+        return turnMapper.mapToTurnEntityList(turns);
+    }
 
     @Override
-    public void createPatientTurn(String centerName, LocalDate date, String hour, String dni) {
-        // Realiza la búsqueda en la base de datos para verificar si ya existe un turno para esa fecha y hora en el centro
-        List<Turn> existingTurns = turnRepository.findByCenterNameAndDateAndHour(centerName, date, hour);
+    public List<TurnResponse> getAllTurnsByCenterName(String centerName) {
+        List<Turn> turns = turnRepository.findAllByCenterName(centerName);
+        return turnMapper.mapToTurnEntityList(turns);
+    }
 
-        if (!existingTurns.isEmpty()) {
-            // Lanza una excepción si ya existe un turno para esa fecha y hora en el centro
-            throw new TurnConflictException("Ya existe un turno para la fecha y hora especificadas en este centro");
+    @Override
+    public TurnResponse getTurnBy(String centerName, LocalDate date, String hour) {
+        Turn turn = turnRepository.findByCenterNameAndDateAndHourTurn(centerName, date, hour)
+                .orElseThrow(() -> new TurnNotFoundException("Turno no encontrado"));
+        TurnResponse response = turnMapper.mapToTurnResponse(turn);
+        return response;
+    }
+
+    @Override
+    public void deleteTurnById(Long id) {
+        Turn turn = turnRepository.findById(id)
+                .orElseThrow(() -> new TurnNotFoundException("Tuno no encontrado con id: " + id));
+        turnRepository.delete(turn);
+    }
+
+    @Override
+    public List<TurnResponse> getAllTurnsByCenterNameAndUserId(String centerName, Long userId) {
+        UserEntity user = userService.findById(userId);
+        // Buscar el centro por nombre dentro del conjunto del usuario
+        Optional<HealthCenterEntity> healthCenter = user.getCenters().stream()
+                .filter(center -> center.getName().equalsIgnoreCase(centerName))
+                .findFirst();
+        if(healthCenter.isPresent()){
+            List<Turn> turnList = healthCenter.get().getSchedule().getTurnList();
+
+            // Mapear los objetos Turn a TurnResponse
+            List<TurnResponse> turnResponses = turnList.stream()
+                    .map(turn -> turnMapper.mapToTurnResponse(turn))
+                    .collect(Collectors.toList());
+
+            return turnResponses;
         }
-        HealthCenterEntity center = healthCenterService.finByName(centerName);
-        Patient patient = patientService.findByDni(dni);
-        Turn createTurn = turnMapper.mapToTurnEntity(centerName, date, hour, dni);
-        createTurn.setSchedule(center.getSchedule());
-        createTurn.setPatient(patient);
-        turnRepository.save(createTurn);
+        else {
+            throw new HealthCenterNotFoundException("Centro no encontrado para el usuario " + user.getUsername());
+        }
 
     }
 }

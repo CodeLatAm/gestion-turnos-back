@@ -79,8 +79,18 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handlePatientAlreadyExistExceptions(PatientAlreadyExistExceptions ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<String> handlePatientNotFountException(PatientNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
     @ExceptionHandler(TurnConflictException.class)
     public ResponseEntity<String> handleTurnConflictException(TurnConflictException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+    @ExceptionHandler(TurnNotFoundException.class)
+    public ResponseEntity<String> handleTurnNotFountException(TurnNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }

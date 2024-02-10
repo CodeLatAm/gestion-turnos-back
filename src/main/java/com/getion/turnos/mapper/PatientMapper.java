@@ -2,6 +2,7 @@ package com.getion.turnos.mapper;
 
 import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.request.PatientRequest;
+import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,28 @@ public class PatientMapper {
                 .age(patient.getAge())
                 .dni(patient.getDni())
                 .healthInsurance(patient.getHealthInsurance())
+                .build();
+    }
+
+    public PatientPageResponse mapToPatientPage(Patient patient) {
+        return PatientPageResponse.builder()
+                .id(patient.getId())
+                .dni(patient.getDni())
+                .email(patient.getEmail())
+                .genre(patient.getGenre())
+                .address(patient.getAddress())
+                .healthInsurance(patient.getHealthInsurance())
+                .name(patient.getName())
+                .surname(patient.getSurname())
+                .affiliateNumber(patient.getAffiliateNumber())
+                .age(patient.getAge())
+                .cellphone(patient.getCellphone())
+                .dateOfBirth(patient.getDateOfBirth())
+                .landline(patient.getLandline())
+                .nationality(patient.getNationality())
+                .plan(patient.getPlan())
+                .profession(patient.getProfession())
+                .province(patient.getProvince())
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import com.getion.turnos.enums.ShiftStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 
 @Getter @Setter
@@ -21,6 +22,7 @@ public class Turn {
     private String hour;
     private String patientDni;
     private boolean availability;
+    @Enumerated(EnumType.STRING)
     private ShiftStatus shiftStatus;
     @ManyToOne
     @JoinColumn(name = "patient_id")
