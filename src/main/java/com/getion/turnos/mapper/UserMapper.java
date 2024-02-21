@@ -44,7 +44,7 @@ public class UserMapper {
                 .name(user.getName())
                 .token(jwt)
                 .profileId(user.getProfile().getId())
-                .message("Logueo exitoso")
+                .message("Ingresando al sistema")
                 .userName(user.getUsername())
                 .build();
     }
@@ -100,6 +100,7 @@ public class UserMapper {
                 .phone(center.getPhone())
                 .specialty(center.getSpecialty())
                 .id(center.getId())
+                .totalPatients(center.getPatientSet().size())
 
                 .build();
 

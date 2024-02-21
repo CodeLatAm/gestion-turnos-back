@@ -29,6 +29,7 @@ public class PatientMapper {
                 .profession(request.getProfession())
                 .email(request.getEmail())
                 .dni(request.getDni())
+
                 .build();
     }
 
@@ -66,5 +67,24 @@ public class PatientMapper {
                 .profession(patient.getProfession())
                 .province(patient.getProvince())
                 .build();
+    }
+
+    public void mapToPatient(PatientRequest request, Patient patient) {
+        patient.setAge(request.getAge());
+        patient.setAddress(request.getAddress());
+        patient.setDni(request.getDni());
+        patient.setAffiliateNumber(request.getAffiliateNumber());
+        patient.setCellphone(request.getCellphone());
+        patient.setDateOfBirth(request.getDateOfBirth());
+        patient.setEmail(request.getEmail());
+        patient.setGenre(request.getGenre());
+        patient.setLandline(request.getLandline());
+        patient.setName(request.getName());
+        patient.setNationality(request.getNationality());
+        patient.setPlan(request.getPlan());
+        patient.setProfession(request.getProfession());
+        patient.setProvince(request.getProvince());
+        patient.setSurname(request.getSurname());
+
     }
 }

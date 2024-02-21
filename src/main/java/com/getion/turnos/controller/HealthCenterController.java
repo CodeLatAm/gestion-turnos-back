@@ -7,6 +7,8 @@ import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.service.injectionDependency.HealthCenterService;
 import com.getion.turnos.service.injectionDependency.ProfileService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -33,5 +35,19 @@ public class HealthCenterController {
     public ResponseEntity<Set<HealthCenterNamesResponse>> getAllCentersName(@PathVariable Long userId){
         Set<HealthCenterNamesResponse> responses = healthCenterService.getAllCentersName(userId);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+    @GetMapping("/total-patients")
+    public ResponseEntity<Integer> totalPatientsByCenter(
+            @NotNull(message = "El userId es requerido") @RequestParam Long userId,
+            @NotBlank(message = "EL centro es requerido") @RequestParam String centerName){
+        Integer total = healthCenterService.getTotalPatientsByCenter(userId, centerName);
+        return ResponseEntity.status(HttpStatus.OK).body(total);
+    }
+
+    @GetMapping("/total-centers")
+    public ResponseEntity<Integer> totalCentersByUser(
+            @NotNull(message = "El userId es requerido") @RequestParam Long userId){
+        Integer total = healthCenterService.getTotalPatientsByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(total);
     }
 }

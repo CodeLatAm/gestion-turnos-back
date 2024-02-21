@@ -14,4 +14,10 @@ public interface HealthCenterService {
     HealthCenterEntity finByName(String centerName);
 
     Set<HealthCenterNamesResponse> getAllCentersName(Long userId);
+
+    Integer getTotalPatientsByCenter(Long userId, String centerName);
+
+    Integer getTotalPatientsByUser(Long userId);
+
+    void save(HealthCenterEntity healthCenter);
 }

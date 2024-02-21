@@ -6,6 +6,7 @@ import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
 import com.getion.turnos.service.injectionDependency.PatientService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -47,11 +48,33 @@ public class PatientController {
     public ResponseEntity<Page<PatientPageResponse>> getPatientsPage(
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String centerName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size){
+            @RequestParam int page,
+            @RequestParam int size){
         Page<PatientPageResponse> responses = patientService.getPatientPage(userId, centerName, PageRequest.of(page, size));
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
+    @GetMapping("/total-patients")
+    public ResponseEntity<Integer> getTotalPatientsByCenterNameAndUser(
+            @NotNull(message = "El userId es requerido") @RequestParam Long userId){
+        Integer total = patientService.getTotalPatientsByCenterNameAndUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(total);
+    }
+    @GetMapping("/patient-by-id-and-user-id")
+    public ResponseEntity<PatientPageResponse> getPatientByIdAndUserId(
+            @NotNull(message = "El patientId es requerido") @RequestParam Long patientId,
+            @NotNull(message = "EL userId es requerido") @RequestParam Long userId
+    ){
+        PatientPageResponse response = patientService.getPatientByIdAndUserId(patientId, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/update-patient")
+    public ResponseEntity<MessageResponse> updatePatient(@NotNull @RequestParam Long patientId,
+                                                         @NotNull @RequestParam Long userId,
+                                                         @Valid @RequestBody PatientRequest request){
+        patientService.updatePatient(patientId, userId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente actualizado"));
+    }
 
 }

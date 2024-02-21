@@ -30,6 +30,7 @@ public class HealthCenterMapper {
     private HealthCenterNamesResponse mapToCentersResponse(HealthCenterEntity healthCenterEntity) {
         return HealthCenterNamesResponse.builder()
                 .name(healthCenterEntity.getName())
+                .totalPatients(healthCenterEntity.getPatientSet().size())
                 .build();
     }
 }

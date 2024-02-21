@@ -16,4 +16,8 @@ public interface TurnService {
     void deleteTurnById(Long id);
 
     List<TurnResponse> getAllTurnsByCenterNameAndUserId(String centerName, Long userId);
+
+    List<TurnResponse> getAllTurnsByUserId(Long userId);
+
+    void changeStatus(Long turnId, String status);
 }

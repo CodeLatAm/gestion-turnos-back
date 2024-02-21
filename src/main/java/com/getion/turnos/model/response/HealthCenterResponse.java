@@ -17,5 +17,6 @@ public class HealthCenterResponse {
     private String phone;
     private String email;
     private String specialty;
+    private Integer totalPatients;
 
 }

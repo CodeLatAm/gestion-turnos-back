@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class HealthCenterNamesResponse {
 
     private String name;
+    private Integer totalPatients;
 }

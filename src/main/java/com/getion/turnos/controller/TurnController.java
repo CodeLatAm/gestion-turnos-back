@@ -74,5 +74,18 @@ public class TurnController {
         List<TurnResponse> responses = turnService.getAllTurnsByCenterNameAndUserId(centerName,userId);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
+    @GetMapping("/all-by-user")
+    public ResponseEntity<List<TurnResponse>> getAllTurnsByUserId(
+            @NotNull(message = "El userId es requerido") @RequestParam Long userId){
+        List<TurnResponse> responses = turnService.getAllTurnsByUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+    @PutMapping("/change-status")
+    public ResponseEntity<MessageResponse> changeStatus(
+            @NotNull(message = "El turnId es requerido") @RequestParam Long turnId,
+            @NotBlank(message = "El estado es requerido") @RequestParam String status){
+            turnService.changeStatus(turnId, status);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Estado actualizado"));
+    }
 
 }

@@ -23,8 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +56,8 @@ public class TurnServiceImpl implements TurnService {
             if (patientOptional.isPresent()) {
                 Patient patient = patientOptional.get();
                 // Agregar el paciente al centro de salud
-                healthCenter.addPatient(patient);
+                healthCenter.addPatient2(patient);
+                //healthCenterService.save(healthCenter);
                 // Crear el turno
                 Turn turn = new Turn();
                 turn.setDate(date);
@@ -66,8 +68,10 @@ public class TurnServiceImpl implements TurnService {
                 turn.setShiftStatus(ShiftStatus.ASIGNADO);
                 turn.setSchedule(healthCenter.getSchedule());
                 turn.setPatient(patient);
+                turn.setUserId(user.getId());
                 // Guardar el turno
                 turnRepository.save(turn);
+
             } else {
                 // Manejar el caso donde el paciente no está asociado al usuario
                 throw new PatientNotFoundException("El paciente no está asociado al usuario");
@@ -124,5 +128,31 @@ public class TurnServiceImpl implements TurnService {
             throw new HealthCenterNotFoundException("Centro no encontrado para el usuario " + user.getUsername());
         }
 
+    }
+
+    @Override
+    public List<TurnResponse> getAllTurnsByUserId(Long userId) {
+        // Obtener el usuario por su ID
+        UserEntity user = userService.findById(userId);
+
+        // Obtener la lista de turnos del usuario del día actual
+        List<Turn> turns = turnRepository.findByUserIdAndDate(userId, LocalDate.now());
+
+        // Ordenar los turnos por hora ascendente
+        turns.sort(Comparator.comparing(turn -> LocalTime.parse(turn.getHour(), DateTimeFormatter.ofPattern("H:mm"))));
+
+        List<TurnResponse> responses = turnMapper.mapToTurnEntityList(turns);
+
+        return responses;
+    }
+
+    @Transactional
+    @Override
+    public void changeStatus(Long turnId, String status) {
+        Turn turn = turnRepository.findById(turnId).orElseThrow(
+                () -> new TurnNotFoundException("Turno no encontrado con id = " + turnId)
+        );
+        turn.setShiftStatus(ShiftStatus.valueOf(status));
+        turnRepository.save(turn);
     }
 }
