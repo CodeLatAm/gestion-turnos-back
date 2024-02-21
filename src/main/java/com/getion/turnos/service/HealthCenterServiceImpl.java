@@ -89,6 +89,35 @@ public class HealthCenterServiceImpl implements HealthCenterService {
     public Set<HealthCenterNamesResponse> getAllCentersName(Long userId) {
         UserEntity user = userService.findById(userId);
         Set<HealthCenterNamesResponse> responses = healthCenterMapper.mapToCenters(user.getCenters());
+
         return responses;
+    }
+
+    @Override
+    public Integer getTotalPatientsByCenter(Long userId, String centerName){
+        UserEntity user = userService.findById(userId);
+        // Buscar el centro por nombre dentro del conjunto del usuario
+        Optional<HealthCenterEntity> healthCenterOptional = user.getCenters().stream()
+                .filter(center -> center.getName().equalsIgnoreCase(centerName))
+                .findFirst();
+        if(healthCenterOptional.isPresent()){
+            HealthCenterEntity healthCenter = healthCenterOptional.get();
+            return healthCenter.getPatientSet().size();
+        }
+        else {
+            throw new HealthCenterNotFoundException("Centro no encontrado con nombre " + centerName);
+        }
+    }
+
+    @Override
+    public Integer getTotalPatientsByUser(Long userId) {
+        UserEntity user = userService.findById(userId);
+
+        return user.getCenters().size();
+    }
+
+    @Override
+    public void save(HealthCenterEntity healthCenter) {
+        healthCenterRepository.save(healthCenter);
     }
 }

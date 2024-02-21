@@ -30,5 +30,7 @@ public class Turn {
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+    private Long userId;
+
 
 }

@@ -74,9 +74,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
-			<version>3.1.2</version>
+
 		</dependency>
-			<!-- Dependencia para JUnit -->
+
+		<!-- Dependencia para JUnit -->
 
 			<dependency>
 				<groupId>com.h2database</groupId>

@@ -17,13 +17,21 @@ import java.util.List;
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
 
     boolean existsByDni(String dni);
-    @Query("SELECT p FROM Patient p WHERE (LOWER(p.name) LIKE LOWER(concat('%', :term, '%')) " +
-            "OR LOWER(p.surname) LIKE LOWER(concat('%', :term, '%')) " +
-            "OR LOWER(p.dni) LIKE LOWER(concat('%', :term, '%'))) " +
+    @Query("SELECT p FROM Patient p WHERE " +
+            "(LOWER(p.name) LIKE LOWER(concat(:term, '%')) " +
+            "OR LOWER(p.surname) LIKE LOWER(concat(:term, '%')) " +
+            "OR LOWER(p.dni) LIKE LOWER(concat(:term, '%')) " +
+            "OR (LOWER(p.name) || ' ' || LOWER(p.surname)) LIKE LOWER(concat(:term, '%')) " +
+            "OR LOWER(p.dni) = LOWER(:term) " +
+            "OR LOWER(p.surname) LIKE LOWER(concat('%', :term, '%'))) " +
             "AND p.user.id = :userId")
     List<Patient> searchPatientByTermAndUserId(@Param("term") String term, @Param("userId") Long userId);
 
     Patient findByDni(String dni);
     boolean existsByDniAndUser(String dni, UserEntity user);
 
+    @Query("SELECT p FROM Patient p WHERE p.id = :patientId AND p.user = :user")
+    Patient findByPatientIdAndUserId(Long patientId, UserEntity user);
+
+    Patient findByIdAndUser(Long patientId, UserEntity user);
 }

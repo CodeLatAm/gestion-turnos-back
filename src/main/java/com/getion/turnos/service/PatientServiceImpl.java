@@ -2,10 +2,12 @@ package com.getion.turnos.service;
 
 import com.getion.turnos.exception.HealthCenterNotFoundException;
 import com.getion.turnos.exception.PatientAlreadyExistExceptions;
+import com.getion.turnos.exception.PatientNotFoundException;
 import com.getion.turnos.mapper.PatientMapper;
 import com.getion.turnos.model.entity.HealthCenterEntity;
 import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.request.ClinicHistoryRequest;
 import com.getion.turnos.model.request.PatientRequest;
 import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +45,7 @@ public class PatientServiceImpl implements PatientService {
 
         UserEntity user = userService.findById(userId);
         if (patientRepository.existsByDniAndUser(request.getDni(), user)) {
-            throw new PatientAlreadyExistExceptions("El Paciente ya se encuentra registrado para este usuario");
+            throw new PatientAlreadyExistExceptions("El Paciente ya se encuentra registrado para este profesional");
         }
         Patient patient = patientMapper.mapToPatientRequest(request);
         user.addPatient(patient);
@@ -60,6 +63,7 @@ public class PatientServiceImpl implements PatientService {
         return responses;
     }
 
+
     @Override
     public Patient findByDni(String dni) {
         return patientRepository.findByDni(dni);
@@ -70,18 +74,59 @@ public class PatientServiceImpl implements PatientService {
         UserEntity user = userService.findById(userId);
         Optional<HealthCenterEntity> centerOptional = user.getCenters().stream()
                 .filter(c -> c.getName().equalsIgnoreCase(centerName)).findFirst();
-        if(centerOptional.isPresent()){
+        if (centerOptional.isPresent()) {
             HealthCenterEntity center = centerOptional.get();
-            List<Patient> patientList = center.getPatientSet();  // Paginar la lista de pacientes
+            List<Patient> patientList = center.getPatientSet();  // Obtener la lista de pacientes del centro
+
             int start = (int) pageRequest.getOffset();
             int end = Math.min((start + pageRequest.getPageSize()), patientList.size());
-            List<Patient> paginatedPatients = patientList.subList(start, end);
-            // Convertir la lista paginada a una página de pacientes
-            Page<Patient> pacientesPage = new PageImpl<>(paginatedPatients, pageRequest, patientList.size());
-            return pacientesPage.map(patientMapper::mapToPatientPage);
-        }else{
-            throw  new HealthCenterNotFoundException("Centro no encontrado con nombre: " + centerName);
-        }
 
+            // Verificar que el índice de inicio no sea mayor que el tamaño de la lista
+            if (start <= patientList.size()) {
+                // Crear una sublista de pacientes dentro del rango válido
+                List<Patient> paginatedPatients = patientList.subList(start, end);
+                // Convertir la lista paginada a una página de pacientes
+                Page<Patient> patientsPage = new PageImpl<>(paginatedPatients, pageRequest, patientList.size());
+                // Mapear la página de pacientes a una página de respuestas
+                return patientsPage.map(patientMapper::mapToPatientPage);
+            } else {
+                // Si el índice de inicio es mayor que el tamaño de la lista, devolver una página vacía
+                return new PageImpl<>(Collections.emptyList(), pageRequest, 0);
+            }
+        } else {
+            throw new HealthCenterNotFoundException("Centro no encontrado con nombre: " + centerName);
+        }
+    }
+
+    @Override
+    public Integer getTotalPatientsByCenterNameAndUser(Long userId) {
+        UserEntity user = userService.findById(userId);
+        return user.getPatientSet().size();
+    }
+
+    @Override
+    public PatientPageResponse getPatientByIdAndUserId(Long patientId, Long userId) {
+        UserEntity user = userService.findById(userId);
+        Patient patient = patientRepository.findByIdAndUser(patientId, user);
+        PatientPageResponse response = patientMapper.mapToPatientPage(patient);
+        return response;
+    }
+
+    @Transactional
+    @Override
+    public void updatePatient(Long patientId, Long userId, PatientRequest request) {
+        UserEntity user = userService.findById(userId);
+        Patient patient = patientRepository.findById(patientId).orElseThrow(
+                () -> new PatientNotFoundException("Paciente no encontrado con id: " + patientId)
+        );
+        patientMapper.mapToPatient(request, patient);
+        patient.setUser(user);
+        patientRepository.save(patient);
+    }
+
+    @Override
+    public Patient findByIdAndUser(Long patientId, UserEntity user) {
+        Patient patient = patientRepository.findByIdAndUser(patientId, user);
+        return patient;
     }
 }

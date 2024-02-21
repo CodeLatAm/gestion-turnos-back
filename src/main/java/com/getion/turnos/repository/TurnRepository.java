@@ -18,4 +18,6 @@ public interface TurnRepository extends JpaRepository<Turn, Long> {
     Optional<Turn> findByCenterNameAndDateAndHourTurn(@Param("centerName") String centerName,
                                                   @Param("date") LocalDate date,
                                                   @Param("hour") String hour);
+
+    List<Turn> findByUserIdAndDate(Long userId, LocalDate now);
 }
