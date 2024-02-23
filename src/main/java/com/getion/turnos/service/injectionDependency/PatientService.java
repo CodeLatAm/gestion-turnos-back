@@ -28,4 +28,10 @@ public interface PatientService {
 
 
     Patient findByIdAndUser(Long patientId, UserEntity user);
+
+    Patient findById(Long patientId);
+
+    PatientPageResponse findByIdPatientResponse(Long id);
+
+    List<PatientPageResponse> getAllPatientsByCenterNameAndUserId(String centerName, Long userId);
 }

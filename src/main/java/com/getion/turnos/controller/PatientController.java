@@ -6,6 +6,7 @@ import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
 import com.getion.turnos.service.injectionDependency.PatientService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -77,4 +78,19 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente actualizado"));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientPageResponse> getPatientById(@PathVariable Long id){
+        PatientPageResponse response = patientService.findByIdPatientResponse(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/centerName-userId")
+    public ResponseEntity<List<PatientPageResponse>> getAllPatientsByCenterNameAndUserId(
+            @NotBlank @RequestParam String centerName,
+            @NotNull @RequestParam Long userId
+
+    ){
+        List<PatientPageResponse> responses = patientService.getAllPatientsByCenterNameAndUserId(centerName, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
 }

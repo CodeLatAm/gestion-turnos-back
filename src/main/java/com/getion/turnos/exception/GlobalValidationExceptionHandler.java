@@ -92,5 +92,9 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleTurnNotFountException(TurnNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    @ExceptionHandler(ClinicHistoryNotFountException.class)
+    public ResponseEntity<String> handleClinicHistoryNotFountException(ClinicHistoryNotFountException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 
 }

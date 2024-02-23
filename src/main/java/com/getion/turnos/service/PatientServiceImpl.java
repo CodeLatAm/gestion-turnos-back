@@ -129,4 +129,37 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.findByIdAndUser(patientId, user);
         return patient;
     }
+
+    @Override
+    public Patient findById(Long patientId) {
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> {
+            throw new PatientNotFoundException("El paciente con id: " + patientId + "no esta registrado" );
+        });
+        return patient;
+    }
+    @Override
+    public PatientPageResponse findByIdPatientResponse(Long id){
+        Patient patient = patientRepository.findById(id).orElseThrow(() -> {
+            throw new PatientNotFoundException("El paciente con id: " + id + "no esta registrado" );
+        });
+        PatientPageResponse response = patientMapper.mapToPatientPage(patient);
+        return  response;
+    }
+
+    @Override
+    public List<PatientPageResponse> getAllPatientsByCenterNameAndUserId(String centerName, Long userId) {
+        UserEntity user = userService.findById(userId);
+        Optional<HealthCenterEntity> center = user.getCenters().stream().filter(
+                center1 -> center1.getName().equalsIgnoreCase(centerName)
+        ).findFirst();
+        if(center.isPresent()){
+            HealthCenterEntity center1 = center.get();
+            List<PatientPageResponse> response = patientMapper.mapToPatientPageRsponseList(center1.getPatientSet());
+            return response;
+        }else {
+            throw new HealthCenterNotFoundException("Centro no encontrado: " + centerName);
+        }
+        //return Collections.emptyList();
+        //TODO terminar
+    }
 }

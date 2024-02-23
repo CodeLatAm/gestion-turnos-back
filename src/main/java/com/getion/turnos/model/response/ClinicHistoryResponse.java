@@ -1,4 +1,4 @@
-package com.getion.turnos.model.request;
+package com.getion.turnos.model.response;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -12,16 +12,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClinicHistoryRequest {
+public class ClinicHistoryResponse {
 
-    @NotBlank(message = "Es requerido")
+    private Long id;
     private String centerName;
-    @NotBlank(message = "La fecha es requerida")
     private LocalDate localDate;
-    @NotBlank(message = "El motivo es requerido")
     private String reasonForConsultation;
     private String background; // Antecedentes
     private String physicalExam; // ExamenFísico;
     private String complementaryStudies; // EstudiosComplementarios;
     private String observations; // Observaciones;
+    private PatientPageResponse patientResponse;
 }
