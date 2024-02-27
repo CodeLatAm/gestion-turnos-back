@@ -1,6 +1,7 @@
 package com.getion.turnos.controller;
 
 import com.getion.turnos.model.request.PatientRequest;
+import com.getion.turnos.model.response.GetTotalGendersResponse;
 import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -84,13 +86,52 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/centerName-userId")
-    public ResponseEntity<List<PatientPageResponse>> getAllPatientsByCenterNameAndUserId(
+    @GetMapping("/search")
+    public ResponseEntity<List<PatientPageResponse>> searchPatients(
             @NotBlank @RequestParam String centerName,
-            @NotNull @RequestParam Long userId
+            @NotNull @RequestParam Long userId,
+            @RequestParam(required = false) String term
+    ) {
+        if (term == null || term.isEmpty()) {
+            return getAllPatientsByCenterNameAndUserId(centerName, userId);
+        } else {
+            return searchPatientsByTerm(centerName, userId, term);
+        }
+    }
 
-    ){
+    private ResponseEntity<List<PatientPageResponse>> getAllPatientsByCenterNameAndUserId(String centerName, Long userId) {
         List<PatientPageResponse> responses = patientService.getAllPatientsByCenterNameAndUserId(centerName, userId);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
+
+    private ResponseEntity<List<PatientPageResponse>> searchPatientsByTerm(String centerName, Long userId, String term) {
+        List<PatientPageResponse> responses = patientService.searchPatientsByTerm(centerName, userId, term);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @GetMapping("/search-patients")
+    public ResponseEntity<List<PatientPageResponse>> searchPatientsByCenterNameAndUser(
+            @NotBlank @RequestParam String centerName,
+            @NotNull @RequestParam Long userId) {
+
+        return getAllPatientsByCenterNameAndUserId(centerName, userId);
+    }
+
+    @GetMapping("/filters")
+    public ResponseEntity<List<PatientPageResponse>> filtersPatients(
+            @NotNull @RequestParam Long userId,
+            @RequestParam(required = false) String term
+    ){
+        List<PatientPageResponse> responses = patientService.filtersPatients(userId, term);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @GetMapping("/get-total-genders")
+    public ResponseEntity<GetTotalGendersResponse> getTotalGenders(@NotNull @RequestParam Long userId){
+        GetTotalGendersResponse responses = patientService.getTotalGenders(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+
+
 }

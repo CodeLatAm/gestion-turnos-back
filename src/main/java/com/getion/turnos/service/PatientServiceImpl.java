@@ -3,12 +3,14 @@ package com.getion.turnos.service;
 import com.getion.turnos.exception.HealthCenterNotFoundException;
 import com.getion.turnos.exception.PatientAlreadyExistExceptions;
 import com.getion.turnos.exception.PatientNotFoundException;
+import com.getion.turnos.exception.UserNotFoundException;
 import com.getion.turnos.mapper.PatientMapper;
 import com.getion.turnos.model.entity.HealthCenterEntity;
 import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.request.ClinicHistoryRequest;
 import com.getion.turnos.model.request.PatientRequest;
+import com.getion.turnos.model.response.GetTotalGendersResponse;
 import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
 import com.getion.turnos.repository.PatientRepository;
@@ -25,9 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -148,18 +149,85 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<PatientPageResponse> getAllPatientsByCenterNameAndUserId(String centerName, Long userId) {
+        log.info("Entrando al servicio paciente con metodo, getAllPatientsByCenterNameAndUserId(S, L)");
         UserEntity user = userService.findById(userId);
-        Optional<HealthCenterEntity> center = user.getCenters().stream().filter(
-                center1 -> center1.getName().equalsIgnoreCase(centerName)
-        ).findFirst();
-        if(center.isPresent()){
+        if(centerName.equalsIgnoreCase("Todos")){
+            List<Patient> patients = patientRepository.findByUser(user);
+            List<PatientPageResponse> responses = patientMapper.mapToPatientPageRsponseList(patients);
+            return responses;
+        }
+            Optional<HealthCenterEntity> center = user.getCenters().stream()
+                    .filter(c -> c.getName().equalsIgnoreCase(centerName))
+                    .findFirst();
+            if (center.isPresent()) {
+                HealthCenterEntity center1 = center.get();
+                List<PatientPageResponse> response = patientMapper.mapToPatientPageRsponseList(center1.getPatientSet());
+                return response;
+            } else {
+                log.error("Centro no encontrado: " + centerName);
+                throw new HealthCenterNotFoundException("Centro no encontrado: " + centerName);
+            }
+    }
+
+    @Override
+    public List<PatientPageResponse> searchPatientsByTerm(String centerName, Long userId, String term) {
+        log.info("Entrando al servicio paciente con metodo, searchPatientsByTerm( S, L)");
+        UserEntity user = userService.findById(userId);
+        Optional<HealthCenterEntity> center = user.getCenters().stream()
+                .filter(c -> c.getName().equalsIgnoreCase(centerName))
+                .findFirst();
+        if (center.isPresent()) {
             HealthCenterEntity center1 = center.get();
-            List<PatientPageResponse> response = patientMapper.mapToPatientPageRsponseList(center1.getPatientSet());
-            return response;
-        }else {
+            List<Patient> patients = center1.getPatientSet().stream()
+                    .filter(p -> containsTerm(p, term))
+                    .collect(Collectors.toList());
+
+            return patientMapper.mapToPatientPageRsponseList(patients);
+        } else {
+            log.error("Centro no encontrado: " + centerName);
             throw new HealthCenterNotFoundException("Centro no encontrado: " + centerName);
         }
-        //return Collections.emptyList();
-        //TODO terminar
+    }
+
+    private boolean containsTerm(Patient patient, String term) {
+        String termLowerCase = term.toLowerCase();
+        // Verificar si el término coincide con las tres primeras letras de cada campo, ignorando mayúsculas y minúsculas
+        return patient.getName().toLowerCase().startsWith(termLowerCase) ||
+                patient.getSurname().toLowerCase().startsWith(termLowerCase) ||
+                patient.getDni().toLowerCase().startsWith(termLowerCase) ||
+                patient.getEmail().toLowerCase().startsWith(termLowerCase);
+    }
+
+    @Override
+    public List<PatientPageResponse> filtersPatients(Long userId, String term) {
+        //UserEntity user = userService.findById(userId);
+        this.validateInputs(userId, term);
+
+        List<Patient> patients = patientRepository.searchPatientByTermAndUserId(term, userId);
+        return patientMapper.mapToPatientPageRsponseList(patients);
+    }
+
+    private void validateInputs(Long userId, String term) {
+        if(userId == null){
+            throw new UserNotFoundException("El userId es necesario");
+        }
+        if(term.isEmpty() || term.equals("") || term.length() < 3){
+            throw new PatientNotFoundException("La busqueda no puede estar vacia o ser nula o tener menos de tres caracteres");
+        }
+    }
+
+    @Override
+    public GetTotalGendersResponse getTotalGenders(Long userId) {
+        Integer totalMale = 0;
+        Integer totalFemale = 0;
+        Integer totalTransgender = 0;
+        UserEntity user = userService.findById(userId);
+        Set<Patient> patients = user.getPatientSet();
+        return GetTotalGendersResponse.builder()
+                .totalMale(totalMale)
+                .totalFemale(totalFemale)
+                .totalTransgender(totalTransgender)
+                .build();
+
     }
 }
