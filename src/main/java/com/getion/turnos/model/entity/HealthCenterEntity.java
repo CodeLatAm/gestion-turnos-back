@@ -36,6 +36,9 @@ public class HealthCenterEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
+    public void deletePatient(Patient patient){
+        patientSet.remove(patient);
+    }
     public void addPatient(Patient patient) {
         if (patient != null) {
             boolean patientExists = userEntity.getCenters().stream()

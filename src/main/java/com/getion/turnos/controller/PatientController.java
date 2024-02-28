@@ -57,6 +57,17 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
+    @GetMapping("/page-term")
+    public ResponseEntity<Page<PatientPageResponse>> getPatientsPageByTerm(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String centerName,
+            @RequestParam String term,
+            @RequestParam int page,
+            @RequestParam int size){
+        Page<PatientPageResponse> responses = patientService.getPatientPagByTerme(userId, centerName,term, PageRequest.of(page, size));
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
     @GetMapping("/total-patients")
     public ResponseEntity<Integer> getTotalPatientsByCenterNameAndUser(
             @NotNull(message = "El userId es requerido") @RequestParam Long userId){

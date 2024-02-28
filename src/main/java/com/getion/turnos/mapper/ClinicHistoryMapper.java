@@ -40,6 +40,7 @@ public class ClinicHistoryMapper {
                 .localDate(history.getLocalDate())
                 .observations(history.getObservations())
                 .reasonForConsultation(history.getReasonForConsultation())
+                .physicalExam(history.getPhysicalExam())
                 .patientResponse(patientMapper.mapToPatientPage(history.getPatient()))
                 .build();
     }

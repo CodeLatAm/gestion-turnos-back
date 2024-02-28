@@ -44,4 +44,6 @@ public interface PatientService {
 
 
     GetTotalGendersResponse getTotalGenders(Long userId);
+
+    Page<PatientPageResponse> getPatientPagByTerme(Long userId, String centerName, String term, PageRequest of);
 }

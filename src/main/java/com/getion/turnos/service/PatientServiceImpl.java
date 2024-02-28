@@ -100,6 +100,46 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public Page<PatientPageResponse> getPatientPagByTerme(Long userId, String centerName, String term, PageRequest pageRequest) {
+        UserEntity user = userService.findById(userId);
+        Optional<HealthCenterEntity> centerOptional = user.getCenters().stream()
+                .filter(c -> c.getName().equalsIgnoreCase(centerName)).findFirst();
+        if (centerOptional.isPresent()) {
+            HealthCenterEntity center = centerOptional.get();
+            List<Patient> patientList = center.getPatientSet();  // Obtener la lista de pacientes del centro
+
+            // Convertir el término de búsqueda y los nombres/apellidos de los pacientes a minúsculas
+            String searchTermLowerCase = term.toLowerCase();
+
+            // Filtrar la lista de pacientes por el término de búsqueda ignorando mayúsculas y minúsculas
+            List<Patient> filteredPatients = patientList.stream()
+                    .filter(patient ->
+                            patient.getName().toLowerCase().contains(searchTermLowerCase) ||
+                                    patient.getSurname().toLowerCase().contains(searchTermLowerCase) ||
+                            patient.getDni().contains(searchTermLowerCase) || patient.getAge().contains(term))
+                    .collect(Collectors.toList());
+
+            int start = (int) pageRequest.getOffset();
+            int end = Math.min((start + pageRequest.getPageSize()), filteredPatients.size());
+
+            // Verificar que el índice de inicio no sea mayor que el tamaño de la lista
+            if (start <= filteredPatients.size()) {
+                // Crear una sublista de pacientes dentro del rango válido
+                List<Patient> paginatedPatients = filteredPatients.subList(start, end);
+                // Convertir la lista paginada a una página de pacientes
+                Page<Patient> patientsPage = new PageImpl<>(paginatedPatients, pageRequest, filteredPatients.size());
+                // Mapear la página de pacientes a una página de respuestas
+                return patientsPage.map(patientMapper::mapToPatientPage);
+            } else {
+                // Si el índice de inicio es mayor que el tamaño de la lista, devolver una página vacía
+                return new PageImpl<>(Collections.emptyList(), pageRequest, 0);
+            }
+        } else {
+            throw new HealthCenterNotFoundException("Centro no encontrado con nombre: " + centerName);
+        }
+    }
+
+    @Override
     public Integer getTotalPatientsByCenterNameAndUser(Long userId) {
         UserEntity user = userService.findById(userId);
         return user.getPatientSet().size();
@@ -195,7 +235,8 @@ public class PatientServiceImpl implements PatientService {
         return patient.getName().toLowerCase().startsWith(termLowerCase) ||
                 patient.getSurname().toLowerCase().startsWith(termLowerCase) ||
                 patient.getDni().toLowerCase().startsWith(termLowerCase) ||
-                patient.getEmail().toLowerCase().startsWith(termLowerCase);
+                patient.getEmail().toLowerCase().startsWith(termLowerCase) ||
+                patient.getAge().contains(term);
     }
 
     @Override
@@ -223,6 +264,14 @@ public class PatientServiceImpl implements PatientService {
         Integer totalTransgender = 0;
         UserEntity user = userService.findById(userId);
         Set<Patient> patients = user.getPatientSet();
+        for(Patient p : patients){
+            if (p.getGenre().equalsIgnoreCase("Masculino"))
+                totalMale++;
+            if (p.getGenre().equalsIgnoreCase("Femenino"))
+                totalFemale++;
+            if (p.getGenre().equalsIgnoreCase("Transgénero"))
+                totalTransgender++;
+        }
         return GetTotalGendersResponse.builder()
                 .totalMale(totalMale)
                 .totalFemale(totalFemale)
