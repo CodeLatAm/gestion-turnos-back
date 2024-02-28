@@ -50,4 +50,13 @@ public class HealthCenterController {
         Integer total = healthCenterService.getTotalPatientsByUser(userId);
         return ResponseEntity.status(HttpStatus.OK).body(total);
     }
+    @DeleteMapping("/delete-patient")
+    public ResponseEntity<MessageResponse> deletePatientByCenter(
+            @NotNull(message = "EL userId es requerido") @RequestParam Long userId,
+            @NotBlank(message = "El centerName es requerido") @RequestParam String centerName,
+            @NotNull(message = "El patientId es requerido") @RequestParam Long patientId)
+    {
+        healthCenterService.deletePatientByCenter(userId, centerName, patientId);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente eliminado"));
+    }
 }

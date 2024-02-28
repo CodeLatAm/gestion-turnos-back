@@ -20,4 +20,6 @@ public interface HealthCenterService {
     Integer getTotalPatientsByUser(Long userId);
 
     void save(HealthCenterEntity healthCenter);
+
+    void deletePatientByCenter(Long userId, String centerName, Long patientId);
 }

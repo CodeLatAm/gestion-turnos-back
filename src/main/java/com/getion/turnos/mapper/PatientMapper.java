@@ -37,7 +37,7 @@ public class PatientMapper {
         return patients.stream().map(this::mapToPatientResponse).collect(Collectors.toList());
     }
 
-    private PatientResponse mapToPatientResponse(Patient patient) {
+   public PatientResponse mapToPatientResponse(Patient patient) {
         return PatientResponse.builder()
                 .name(patient.getName())
                 .surname(patient.getSurname())
@@ -86,5 +86,32 @@ public class PatientMapper {
         patient.setProvince(request.getProvince());
         patient.setSurname(request.getSurname());
 
+    }
+
+
+    public List<PatientPageResponse> mapToPatientPageRsponseList(List<Patient> patientSet) {
+        return patientSet.stream().map(this::mapToPatientPageResponse).collect(Collectors.toList());
+    }
+
+    private PatientPageResponse mapToPatientPageResponse(Patient patient) {
+        return PatientPageResponse.builder()
+                .id(patient.getId())
+                .dni(patient.getDni())
+                .email(patient.getEmail())
+                .genre(patient.getGenre())
+                .address(patient.getAddress())
+                .healthInsurance(patient.getHealthInsurance())
+                .name(patient.getName())
+                .surname(patient.getSurname())
+                .affiliateNumber(patient.getAffiliateNumber())
+                .age(patient.getAge())
+                .cellphone(patient.getCellphone())
+                .dateOfBirth(patient.getDateOfBirth())
+                .landline(patient.getLandline())
+                .nationality(patient.getNationality())
+                .plan(patient.getPlan())
+                .profession(patient.getProfession())
+                .province(patient.getProvince())
+                .build();
     }
 }

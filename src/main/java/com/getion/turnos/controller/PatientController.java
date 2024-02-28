@@ -1,11 +1,13 @@
 package com.getion.turnos.controller;
 
 import com.getion.turnos.model.request.PatientRequest;
+import com.getion.turnos.model.response.GetTotalGendersResponse;
 import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
 import com.getion.turnos.service.injectionDependency.PatientService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RestController
@@ -54,6 +57,17 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
+    @GetMapping("/page-term")
+    public ResponseEntity<Page<PatientPageResponse>> getPatientsPageByTerm(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String centerName,
+            @RequestParam String term,
+            @RequestParam int page,
+            @RequestParam int size){
+        Page<PatientPageResponse> responses = patientService.getPatientPagByTerme(userId, centerName,term, PageRequest.of(page, size));
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
     @GetMapping("/total-patients")
     public ResponseEntity<Integer> getTotalPatientsByCenterNameAndUser(
             @NotNull(message = "El userId es requerido") @RequestParam Long userId){
@@ -76,5 +90,59 @@ public class PatientController {
         patientService.updatePatient(patientId, userId, request);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente actualizado"));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientPageResponse> getPatientById(@PathVariable Long id){
+        PatientPageResponse response = patientService.findByIdPatientResponse(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PatientPageResponse>> searchPatients(
+            @NotBlank @RequestParam String centerName,
+            @NotNull @RequestParam Long userId,
+            @RequestParam(required = false) String term
+    ) {
+        if (term == null || term.isEmpty()) {
+            return getAllPatientsByCenterNameAndUserId(centerName, userId);
+        } else {
+            return searchPatientsByTerm(centerName, userId, term);
+        }
+    }
+
+    private ResponseEntity<List<PatientPageResponse>> getAllPatientsByCenterNameAndUserId(String centerName, Long userId) {
+        List<PatientPageResponse> responses = patientService.getAllPatientsByCenterNameAndUserId(centerName, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    private ResponseEntity<List<PatientPageResponse>> searchPatientsByTerm(String centerName, Long userId, String term) {
+        List<PatientPageResponse> responses = patientService.searchPatientsByTerm(centerName, userId, term);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @GetMapping("/search-patients")
+    public ResponseEntity<List<PatientPageResponse>> searchPatientsByCenterNameAndUser(
+            @NotBlank @RequestParam String centerName,
+            @NotNull @RequestParam Long userId) {
+
+        return getAllPatientsByCenterNameAndUserId(centerName, userId);
+    }
+
+    @GetMapping("/filters")
+    public ResponseEntity<List<PatientPageResponse>> filtersPatients(
+            @NotNull @RequestParam Long userId,
+            @RequestParam(required = false) String term
+    ){
+        List<PatientPageResponse> responses = patientService.filtersPatients(userId, term);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @GetMapping("/get-total-genders")
+    public ResponseEntity<GetTotalGendersResponse> getTotalGenders(@NotNull @RequestParam Long userId){
+        GetTotalGendersResponse responses = patientService.getTotalGenders(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+
 
 }

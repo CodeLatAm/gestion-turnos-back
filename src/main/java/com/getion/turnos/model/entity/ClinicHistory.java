@@ -21,9 +21,9 @@ public class ClinicHistory {
     private LocalDate localDate;
     private String reasonForConsultation;
     private String background; // Antecedentes
-    private String PhysicalExam; // ExamenFísico;
-    private String ComplementaryStudies; // EstudiosComplementarios;
-    private String Observations; // Observaciones;
+    private String physicalExam; // ExamenFísico;
+    private String complementaryStudies; // EstudiosComplementarios;
+    private String observations; // Observaciones;
     @ManyToOne()
     @JoinColumn(name = "patient_id")
     private Patient patient;
