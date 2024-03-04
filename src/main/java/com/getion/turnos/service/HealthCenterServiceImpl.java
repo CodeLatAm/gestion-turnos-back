@@ -16,12 +16,15 @@ import com.getion.turnos.service.injectionDependency.HealthCenterService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Log4j2
 @Service
@@ -123,40 +126,42 @@ public class HealthCenterServiceImpl implements HealthCenterService {
         healthCenterRepository.save(healthCenter);
     }
 
-    /* @Override
-    public void deletePatientByCenter(Long userId, String centerName, Long patientId) {
-         UserEntity user = userService.findById(userId);
-         Set<HealthCenterEntity> center = user.getCenters();
-         Optional<HealthCenterEntity> centerOptional = center.stream()
-                 .filter(c -> c.getName().equalsIgnoreCase(centerName))
-                 .findFirst();
-         // Verificar si se encontró el centro y si el paciente está en él
-         boolean deleted = centerOptional.map(healthCenter -> {
-             List<Patient> patients = healthCenter.getPatientSet();
-             return patients.removeIf(p -> p.getId().equals(patientId));
-         }).orElse(false);
-         // Si el paciente no se encontró, lanzar excepción
-         if (!deleted) {
-             throw new PatientNotFoundException("Paciente no encontrado en el centro especificado");
-         }
-
-         // Guardar cambios en la base de datos
-         centerOptional.ifPresent(healthCenterRepository::save);
-     }*/
     @Override
     public void deletePatientByCenter(Long userId, String centerName, Long patientId) {
+        //Obtengo el user
         UserEntity user = userService.findById(userId);
-        Set<HealthCenterEntity> centers = user.getCenters();
-        //Verificamos si el centerName esta en los centros del usuario
-        Optional<HealthCenterEntity> center = centers.stream()
-                .filter(c -> c.getName().equalsIgnoreCase(centerName)).findFirst();
-        boolean deleted = center.map(healthCenter -> {
+        //Busco el conjunto de centros del user
+        Set<HealthCenterEntity> centerEntities = user.getCenters();
+        //Me fijo si esta el centro pasado por parametro
+        Optional<HealthCenterEntity> optionalHealthCenter = centerEntities.stream().filter(
+                healthCenter -> healthCenter.getName().equalsIgnoreCase(centerName)
+        ).findFirst();
+
+        //Borro el paciente y devuelvo true o false
+        boolean deleted = optionalHealthCenter.map(healthCenter -> {
             List<Patient> patients = healthCenter.getPatientSet();
             return patients.removeIf(patient -> patient.getId().equals(patientId));
         }).orElse(false);
+        //Si no esta el paciente lanzo exception
         if(!deleted){
-            throw new PatientNotFoundException("Paciente no encontrado en el centro especificado");
+            throw new PatientNotFoundException("Paciente no encontrado para el centro actual");
         }
-        center.ifPresent(healthCenterRepository::save);
+        //Guardo el borrado
+        optionalHealthCenter.ifPresent(healthCenterRepository::save);
+    }
+
+    @Transactional
+    @Override
+    public void deleteCenterById(Long id) {
+        HealthCenterEntity center = healthCenterRepository.findById(id)
+                .orElseThrow(() -> new HealthCenterNotFoundException("Centro no encontrado con id: " + id));
+        // Agregar registro de depuración
+        log.info("Eliminando centro de salud: {}", center);
+        // Eliminar historias clínicas asociadas a los pacientes
+        center.deletedHistoryClinic();
+        healthCenterRepository.delete(center);
+
+        // Agregar registro de depuración después de la eliminación
+        log.info("Centro de salud eliminado correctamente: {}", center);
     }
 }

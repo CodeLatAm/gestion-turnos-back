@@ -1,5 +1,6 @@
 package com.getion.turnos.repository;
 
+import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.entity.Turn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,8 @@ public interface TurnRepository extends JpaRepository<Turn, Long> {
                                                   @Param("hour") String hour);
 
     List<Turn> findByUserIdAndDate(Long userId, LocalDate now);
+
+    List<Turn> findByPatientId(Long patientId);
+
+    void deleteAllByPatientId(Long patientId);
 }

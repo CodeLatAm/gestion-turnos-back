@@ -34,6 +34,9 @@ public class ProfileEntity{
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private ImageEntity image;
 
 
 

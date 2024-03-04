@@ -14,4 +14,6 @@ public interface ProfileService {
     ProfileEntity createProfile(String name, String lastname, String title, String country, String specialty, UserEntity user);
 
     void update(Long id, Long userId, ProfileRequest request);
+
+    ProfileEntity findById(Long userId);
 }

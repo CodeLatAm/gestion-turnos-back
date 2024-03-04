@@ -4,6 +4,7 @@ package com.getion.turnos.service;
 import com.getion.turnos.exception.ProfileNotFountException;
 import com.getion.turnos.mapper.ProfileMapper;
 import com.getion.turnos.mapper.UserMapper;
+import com.getion.turnos.model.entity.ImageEntity;
 import com.getion.turnos.model.entity.ProfileEntity;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.request.ProfileRequest;
@@ -26,7 +27,6 @@ public class ProfileServiceImp implements ProfileService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final ProfileMapper profileMapper;
-
 
     @Transactional
     @Override
@@ -61,6 +61,7 @@ public class ProfileServiceImp implements ProfileService {
         profile.setCountry(country);
         profile.setSpecialty(specialty);
         profile.setUser(user);
+        profile.setImage(new ImageEntity());
         profileRepository.save(profile);
         return profile;
     }
@@ -78,5 +79,12 @@ public class ProfileServiceImp implements ProfileService {
         // Suponiendo que hay una relación bidireccional entre UserEntity y ProfileEntity
         user.setProfile(existingProfile);
         profileRepository.save(existingProfile);
+    }
+
+    @Override
+    public ProfileEntity findById(Long userId) {
+        return profileRepository.findById(userId).orElseThrow(
+                () -> new ProfileNotFountException("Perfil no encontrado para el userId " + userId)
+        );
     }
 }
