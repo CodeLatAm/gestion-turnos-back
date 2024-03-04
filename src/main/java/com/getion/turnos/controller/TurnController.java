@@ -88,4 +88,10 @@ public class TurnController {
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Estado actualizado"));
     }
 
+    @DeleteMapping("/delete/patient/{patientId}")
+    public ResponseEntity<MessageResponse> deletePatient(@PathVariable Long patientId){
+        turnService.deletePatient(patientId);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente eliminado"));
+    }
+
 }

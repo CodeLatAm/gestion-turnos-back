@@ -22,4 +22,6 @@ public interface HealthCenterService {
     void save(HealthCenterEntity healthCenter);
 
     void deletePatientByCenter(Long userId, String centerName, Long patientId);
+
+    void deleteCenterById(Long id);
 }

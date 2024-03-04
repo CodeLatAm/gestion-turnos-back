@@ -29,7 +29,7 @@ public class PatientMapper {
                 .profession(request.getProfession())
                 .email(request.getEmail())
                 .dni(request.getDni())
-
+                .age(request.getAge())
                 .build();
     }
 

@@ -7,6 +7,7 @@ import com.getion.turnos.exception.UserNotFoundException;
 import com.getion.turnos.mapper.PatientMapper;
 import com.getion.turnos.model.entity.HealthCenterEntity;
 import com.getion.turnos.model.entity.Patient;
+import com.getion.turnos.model.entity.Turn;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.request.ClinicHistoryRequest;
 import com.getion.turnos.model.request.PatientRequest;
@@ -15,6 +16,7 @@ import com.getion.turnos.model.response.PatientPageResponse;
 import com.getion.turnos.model.response.PatientResponse;
 import com.getion.turnos.repository.PatientRepository;
 import com.getion.turnos.service.injectionDependency.PatientService;
+import com.getion.turnos.service.injectionDependency.TurnService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,6 +40,7 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
     private final UserService userService;
+    //private final TurnService turnService;
 
     @Transactional
     @Override
@@ -278,5 +281,10 @@ public class PatientServiceImpl implements PatientService {
                 .totalTransgender(totalTransgender)
                 .build();
 
+    }
+
+    @Override
+    public void deletePatient(Patient patient) {
+        patientRepository.delete(patient);
     }
 }

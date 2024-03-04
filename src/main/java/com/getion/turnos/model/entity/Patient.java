@@ -38,8 +38,13 @@ public class Patient {
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClinicHistory> clinicHistoryList = new ArrayList<>();
+
+    public void deleteAllClinicHistory(){
+        clinicHistoryList.clear();
+    }
 
     public void  addClinicHistory(ClinicHistory history){
         clinicHistoryList.add(history);

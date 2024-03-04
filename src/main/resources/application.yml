@@ -11,7 +11,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+  servlet:
+    multipart:
+      max-file-size: 4MB  # Ajusta el tamaño máximo permitido para un archivo individual, por ejemplo, 10 MB
+      max-request-size: 4MB  # Ajusta el tamaño máximo total permitido para la solicitud, por ejemplo, 10 MB
 # JWT
 jwt:
   secret:

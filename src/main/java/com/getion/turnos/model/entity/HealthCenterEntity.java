@@ -25,13 +25,19 @@ public class HealthCenterEntity {
     private String specialty;
     @OneToOne(mappedBy = "healthCenter", cascade = CascadeType.ALL)
     private Schedule schedule = new Schedule();
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "health_center_patients", // Nombre de la tabla de relación
             joinColumns = @JoinColumn(name = "health_center_id"), // Columna que referencia a este centro de salud
             inverseJoinColumns = @JoinColumn(name = "patient_id") // Columna que referencia al paciente
     )
     private List<Patient> patientSet = new ArrayList<>();
+    public void deletedHistoryClinic() {
+        for (Patient patient : patientSet) {
+            patient.getClinicHistoryList().clear(); // Borra todas las historias clínicas asociadas al paciente
+        }
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;

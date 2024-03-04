@@ -26,37 +26,46 @@ public class HealthCenterController {
     private final HealthCenterService healthCenterService;
 
     @PostMapping("/user/{id}")
-    public ResponseEntity<MessageResponse> createCenter(@PathVariable Long id, @Valid @RequestBody HealthCenterRequest request){
+    public ResponseEntity<MessageResponse> createCenter(@PathVariable Long id, @Valid @RequestBody HealthCenterRequest request) {
         healthCenterService.createCenter(id, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse(HttpStatus.CREATED,"Centro medico creado"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse(HttpStatus.CREATED, "Centro medico creado"));
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Set<HealthCenterNamesResponse>> getAllCentersName(@PathVariable Long userId){
+    public ResponseEntity<Set<HealthCenterNamesResponse>> getAllCentersName(@PathVariable Long userId) {
         Set<HealthCenterNamesResponse> responses = healthCenterService.getAllCentersName(userId);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
+
     @GetMapping("/total-patients")
     public ResponseEntity<Integer> totalPatientsByCenter(
             @NotNull(message = "El userId es requerido") @RequestParam Long userId,
-            @NotBlank(message = "EL centro es requerido") @RequestParam String centerName){
+            @NotBlank(message = "EL centro es requerido") @RequestParam String centerName) {
         Integer total = healthCenterService.getTotalPatientsByCenter(userId, centerName);
         return ResponseEntity.status(HttpStatus.OK).body(total);
     }
 
     @GetMapping("/total-centers")
     public ResponseEntity<Integer> totalCentersByUser(
-            @NotNull(message = "El userId es requerido") @RequestParam Long userId){
+            @NotNull(message = "El userId es requerido") @RequestParam Long userId) {
         Integer total = healthCenterService.getTotalPatientsByUser(userId);
         return ResponseEntity.status(HttpStatus.OK).body(total);
     }
     @DeleteMapping("/delete-patient")
     public ResponseEntity<MessageResponse> deletePatientByCenter(
-            @NotNull(message = "EL userId es requerido") @RequestParam Long userId,
-            @NotBlank(message = "El centerName es requerido") @RequestParam String centerName,
-            @NotNull(message = "El patientId es requerido") @RequestParam Long patientId)
+            @NotNull @RequestParam Long userId,
+            @NotBlank(message = "centerName requerido") @RequestParam String centerName,
+            @NotNull @RequestParam Long patientId
+    )
     {
         healthCenterService.deletePatientByCenter(userId, centerName, patientId);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente eliminado"));
     }
+
+    @DeleteMapping("/delete-center/{id}")
+    public ResponseEntity<MessageResponse> deleteCenterById(@PathVariable Long id){
+        healthCenterService.deleteCenterById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Centro eliminado"));
+    }
+
 }

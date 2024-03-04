@@ -17,6 +17,8 @@ import com.getion.turnos.service.injectionDependency.PatientService;
 import com.getion.turnos.service.injectionDependency.TurnService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.service.spi.InjectService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +36,8 @@ public class TurnServiceImpl implements TurnService {
 
     private final TurnRepository turnRepository;
     private final TurnMapper turnMapper;
-    private final HealthCenterService healthCenterService;
+    //private final HealthCenterService healthCenterService;
+
     private final PatientService patientService;
     private final UserService userService;
 
@@ -154,5 +157,32 @@ public class TurnServiceImpl implements TurnService {
         );
         turn.setShiftStatus(ShiftStatus.valueOf(status));
         turnRepository.save(turn);
+    }
+
+    @Override
+    public void deleteAllTurnsByIdPatient(Long id) {
+        List<Turn> turns = turnRepository.findByPatientId(id);
+        turnRepository.deleteAll(turns);
+    }
+
+    @Transactional
+    @Override
+    public void deletePatient(Long patientId) {
+        Patient patient = patientService.findById(patientId);
+        patient.deleteAllClinicHistory();
+        // Obtener la lista de centros de salud asociados al paciente
+        Set<HealthCenterEntity> centers = patient.getUser().getCenters();
+
+        // Iterar sobre cada centro de salud y eliminar al paciente de su lista de pacientes
+        for (HealthCenterEntity center : centers) {
+            center.getPatientSet().remove(patient);
+        }
+
+        // Eliminar todos los turnos asociados al paciente
+        turnRepository.deleteAllByPatientId(patientId);
+
+        // Eliminar al paciente
+        patientService.deletePatient(patient);
+
     }
 }
