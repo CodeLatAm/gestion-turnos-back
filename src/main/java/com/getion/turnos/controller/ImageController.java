@@ -1,5 +1,7 @@
 package com.getion.turnos.controller;
 
+import com.getion.turnos.model.entity.ImageEntity;
+import com.getion.turnos.model.response.ImageResponse;
 import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.service.injectionDependency.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,11 @@ public class ImageController {
                                                        @RequestParam MultipartFile file) throws IOException {
         imageService.uploadImage(userId, file);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Imagen creada con exito"));
+    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<ImageResponse> getImageByUserId(@PathVariable Long userId){
+         ImageResponse response = imageService.getImageByUserId(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
