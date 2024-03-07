@@ -3,6 +3,7 @@ package com.getion.turnos.service.injectionDependency;
 import com.getion.turnos.model.entity.Turn;
 import com.getion.turnos.model.response.TurnResponse;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface TurnService {
@@ -22,8 +23,8 @@ public interface TurnService {
 
     void changeStatus(Long turnId, String status);
 
-
     void deleteAllTurnsByIdPatient(Long id);
 
     void deletePatient(Long id);
+
 }

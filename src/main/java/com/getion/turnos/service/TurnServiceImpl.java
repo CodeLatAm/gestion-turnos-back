@@ -6,16 +6,10 @@ import com.getion.turnos.exception.PatientNotFoundException;
 import com.getion.turnos.exception.TurnConflictException;
 import com.getion.turnos.exception.TurnNotFoundException;
 import com.getion.turnos.mapper.TurnMapper;
-import com.getion.turnos.model.entity.HealthCenterEntity;
-import com.getion.turnos.model.entity.Patient;
-import com.getion.turnos.model.entity.Turn;
-import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.entity.*;
 import com.getion.turnos.model.response.TurnResponse;
 import com.getion.turnos.repository.TurnRepository;
-import com.getion.turnos.service.injectionDependency.HealthCenterService;
-import com.getion.turnos.service.injectionDependency.PatientService;
-import com.getion.turnos.service.injectionDependency.TurnService;
-import com.getion.turnos.service.injectionDependency.UserService;
+import com.getion.turnos.service.injectionDependency.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +31,7 @@ public class TurnServiceImpl implements TurnService {
     private final TurnRepository turnRepository;
     private final TurnMapper turnMapper;
     //private final HealthCenterService healthCenterService;
-
+    private final ScheduleService scheduleService;
     private final PatientService patientService;
     private final UserService userService;
 
@@ -185,4 +179,6 @@ public class TurnServiceImpl implements TurnService {
         patientService.deletePatient(patient);
 
     }
+
+
 }

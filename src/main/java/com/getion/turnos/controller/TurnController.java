@@ -94,4 +94,5 @@ public class TurnController {
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente eliminado"));
     }
 
+
 }

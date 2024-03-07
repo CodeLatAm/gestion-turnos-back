@@ -4,8 +4,6 @@ import com.getion.turnos.enums.ShiftStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.Date;
-
 
 @Getter @Setter
 @NoArgsConstructor
@@ -32,5 +30,20 @@ public class Turn {
     private Schedule schedule;
     private Long userId;
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Turn{");
+        sb.append("id=").append(id);
+        sb.append(", centerName='").append(centerName).append('\'');
+        sb.append(", date=").append(date);
+        sb.append(", hour='").append(hour).append('\'');
+        sb.append(", patientDni='").append(patientDni).append('\'');
+        sb.append(", availability=").append(availability);
+        sb.append(", shiftStatus=").append(shiftStatus);
+        sb.append(", patient=").append(patient);
+        sb.append(", schedule=").append(schedule);
+        sb.append(", userId=").append(userId);
+        sb.append('}');
+        return sb.toString();
+    }
 }

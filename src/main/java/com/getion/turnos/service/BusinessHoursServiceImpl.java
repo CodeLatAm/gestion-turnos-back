@@ -1,19 +1,17 @@
 package com.getion.turnos.service;
 
 import com.getion.turnos.exception.BusinessHourAlreadyInUseException;
+import com.getion.turnos.exception.BusinessHoursNotFountException;
 import com.getion.turnos.exception.HealthCenterNotFoundException;
 import com.getion.turnos.mapper.BusinessHoursMapper;
-import com.getion.turnos.model.entity.BusinessHours;
-import com.getion.turnos.model.entity.HealthCenterEntity;
-import com.getion.turnos.model.entity.Schedule;
-import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.entity.*;
 import com.getion.turnos.model.request.BusinessHoursRequest;
 import com.getion.turnos.model.response.BusinessHoursResponse;
+import com.getion.turnos.model.response.TurnResponse;
 import com.getion.turnos.repository.BusinessHoursRepository;
-import com.getion.turnos.service.injectionDependency.BusinessHoursService;
-import com.getion.turnos.service.injectionDependency.HealthCenterService;
-import com.getion.turnos.service.injectionDependency.ScheduleService;
-import com.getion.turnos.service.injectionDependency.UserService;
+import com.getion.turnos.repository.ScheduleRepository;
+import com.getion.turnos.repository.TurnRepository;
+import com.getion.turnos.service.injectionDependency.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -21,9 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,6 +40,9 @@ public class BusinessHoursServiceImpl implements BusinessHoursService {
     private final HealthCenterService healthCenterService;
     private final BusinessHoursMapper businessHoursMapper;
     private final UserService userService;
+    private final TurnRepository turnRepository;
+    private final TurnService turnService;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
     @Override
@@ -137,4 +140,55 @@ public class BusinessHoursServiceImpl implements BusinessHoursService {
         }
     }
 
+    @Override
+    public void deleteBusinessHourById(Long id, Long userId) {
+        BusinessHours businessHours = businessHoursRepository.findById(id)
+                .orElseThrow(() -> new BusinessHoursNotFountException("Horario y día de atención no encontrado"));
+
+        // Convertir el día del BusinessHours a mayúsculas y traducir al inglés si es necesario
+        String day = businessHours.getDay().toUpperCase();
+        String translatedDay = translateDayToEnglish(day);
+        log.info(translatedDay);
+
+        // Obtener todos los turnos asociados al centro, día de la semana, usuario y horario dentro del rango de tiempo
+        //TODO Injectar servicio y llevar esta logica al servicio del turno
+        List<Turn> turns = turnRepository.findByUserIdAndCenterName(userId, businessHours.getCenterName());
+
+        // Filtrar los turnos que tienen el mismo día de la semana que el BusinessHours
+        List<Turn> turnsToRemove = new ArrayList<>();
+        for (Turn turn : turns) {
+            DayOfWeek dayOfWeek = DayOfWeek.from(turn.getDate());
+            log.info(dayOfWeek);
+            if (dayOfWeek.name().equalsIgnoreCase(translatedDay)) {
+                turnsToRemove.add(turn);
+            }
+        }
+        // Eliminar los turnos encontrados
+        turnRepository.deleteAll(turnsToRemove);
+
+        // Eliminar el horario de atención
+        businessHoursRepository.delete(businessHours);
+    }
+
+    // Método para traducir el día de la semana al inglés
+    private String translateDayToEnglish(String day) {
+        switch (day) {
+            case "LUNES":
+                return "MONDAY";
+            case "MARTES":
+                return "TUESDAY";
+            case "MIÉRCOLES":
+                return "WEDNESDAY";
+            case "JUEVES":
+                return "THURSDAY";
+            case "VIERNES":
+                return "FRIDAY";
+            case "SÁBADO":
+                return "SATURDAY";
+            case "DOMINGO":
+                return "SUNDAY";
+            default:
+                throw new IllegalArgumentException("Día de la semana no válido: " + day);
+        }
+    }
 }

@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TurnRepository extends JpaRepository<Turn, Long> {
-    List<Turn> findByCenterNameAndDateAndHour(String centerName, LocalDate date, String hour);
+
 
     List<Turn> findAllByCenterName(String centerName);
     @Query("SELECT t FROM Turn t WHERE t.centerName = :centerName AND t.date = :date AND t.hour = :hour")
@@ -25,4 +26,6 @@ public interface TurnRepository extends JpaRepository<Turn, Long> {
     List<Turn> findByPatientId(Long patientId);
 
     void deleteAllByPatientId(Long patientId);
+
+    List<Turn> findByUserIdAndCenterName(Long userId, String centerName);
 }
