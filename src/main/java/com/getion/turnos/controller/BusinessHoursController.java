@@ -6,7 +6,6 @@ import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.service.injectionDependency.BusinessHoursService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,6 +48,12 @@ public class BusinessHoursController {
             @RequestParam @NotNull(message = "El id del user es requerido") Long userId) {
         Set<BusinessHoursResponse> responses = businessHoursService.getAllBusinessHoursByCenterAndUserId(centerName, userId);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @DeleteMapping("/{id}/user/{userId}")
+    public ResponseEntity<MessageResponse> deleteBusinessHourById(@PathVariable Long id, @PathVariable Long userId){
+        businessHoursService.deleteBusinessHourById(id, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Horario y día de atencion borrado"));
     }
 
 }

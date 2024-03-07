@@ -96,5 +96,9 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleClinicHistoryNotFountException(ClinicHistoryNotFountException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    @ExceptionHandler(BusinessHoursNotFountException.class)
+    public ResponseEntity<String> handleBusinessHoursNotFountException(BusinessHoursNotFountException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 
 }

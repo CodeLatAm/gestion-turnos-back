@@ -14,4 +14,5 @@ public interface BusinessHoursService {
     Set<BusinessHoursResponse> getAllBusinessHoursByCenterAndUserIdAndDay(String centerName, Long userId, String day);
 
     Set<BusinessHoursResponse> getAllBusinessHoursByCenterAndUserId(String centerName, Long userId);
+    void deleteBusinessHourById(Long id, Long userId);
 }

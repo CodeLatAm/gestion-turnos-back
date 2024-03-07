@@ -27,14 +27,6 @@ public class Schedule {
     @OneToOne
     @JoinColumn(name = "health_center_id")
     private HealthCenterEntity healthCenter;
-    //@OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<DateEntity> dates = new ArrayList<>();
-/*
-    public void addDate(DateEntity date){
-        dates.add(date);
-        date.setSchedule(this);
-    }
-*/
     // Método auxiliar para agregar BusinessHours
     public void addBusinessHours(BusinessHours businessHours) {
         this.businessHours.add(businessHours);
@@ -44,8 +36,12 @@ public class Schedule {
     public void removeBusinessHours(BusinessHours businessHours) {
         this.businessHours.remove(businessHours);
 
-    }
 
+    }
+    public void removeTurn(Turn turn){
+        turnList.remove(turn);
+        turn.setSchedule(this);
+    }
     public void addTurn(Turn turn){
         turnList.add(turn);
         turn.setSchedule(this);
