@@ -100,5 +100,9 @@ public class GlobalValidationExceptionHandler {
     public ResponseEntity<String> handleBusinessHoursNotFountException(BusinessHoursNotFountException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    @ExceptionHandler(PersonalizedIllegalArgumentException.class)
+    public ResponseEntity<String> handlePersonalizedIllegalArgumentException(PersonalizedIllegalArgumentException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 
 }

@@ -10,11 +10,12 @@ import com.getion.turnos.service.injectionDependency.ImageService;
 import com.getion.turnos.service.injectionDependency.ProfileService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
@@ -28,6 +29,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void uploadImage(Long userId, MultipartFile file) throws IOException {
         ProfileEntity profile = profileService.findById(userId);
+        log.info(profile.toString());
         ImageEntity image = profile.getImage();
         image.setImageData(file.getBytes());
         image.setImageName(file.getOriginalFilename());

@@ -70,7 +70,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient findByDni(String dni) {
-        return patientRepository.findByDni(dni);
+
+        Optional<Patient> patientOptional = patientRepository.findByDni(dni);
+        if(patientOptional.isEmpty()){
+            throw new PatientNotFoundException("Paciente no encontrado, ingresa un dni valido");
+        }
+        return patientOptional.get();
     }
 
     @Override

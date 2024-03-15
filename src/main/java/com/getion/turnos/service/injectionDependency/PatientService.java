@@ -28,13 +28,11 @@ public interface PatientService {
 
     void updatePatient(Long patientId, Long userId, PatientRequest request);
 
-
     Patient findByIdAndUser(Long patientId, UserEntity user);
 
     Patient findById(Long patientId);
 
     PatientPageResponse findByIdPatientResponse(Long id);
-
 
     List<PatientPageResponse> getAllPatientsByCenterNameAndUserId(String centerName, Long userId);
 
@@ -42,11 +40,9 @@ public interface PatientService {
 
     List<PatientPageResponse> filtersPatients(Long userId, String term);
 
-
     GetTotalGendersResponse getTotalGenders(Long userId);
 
     Page<PatientPageResponse> getPatientPagByTerme(Long userId, String centerName, String term, PageRequest of);
-
 
     void deletePatient(Patient patient);
 }
