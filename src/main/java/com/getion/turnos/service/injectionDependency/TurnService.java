@@ -27,4 +27,7 @@ public interface TurnService {
 
     void deletePatient(Long id);
 
+    List<TurnResponse> searchTurnsByDateAndDni(String date, String dni, Long userIds);
+
+    List<TurnResponse> searchTurnsByDateAndDniFilters(String date, String term, Long userId);
 }

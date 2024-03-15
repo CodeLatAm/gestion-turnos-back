@@ -2,6 +2,7 @@ package com.getion.turnos.repository;
 
 import com.getion.turnos.model.entity.Patient;
 import com.getion.turnos.model.entity.Turn;
+import com.getion.turnos.model.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,10 @@ public interface TurnRepository extends JpaRepository<Turn, Long> {
     void deleteAllByPatientId(Long patientId);
 
     List<Turn> findByUserIdAndCenterName(Long userId, String centerName);
+
+
+    List<Turn> findByUserIdAndPatientDni(Long userId, String dni);
+
+    @Query("SELECT t FROM Turn t WHERE t.userId = :userId AND t.patientDni LIKE CONCAT(:dniPrefix, '%')")
+    List<Turn> findByUserIdAndPatientDniStartingWith(@Param("userId") Long userId, @Param("dniPrefix") String dniPrefix);
 }

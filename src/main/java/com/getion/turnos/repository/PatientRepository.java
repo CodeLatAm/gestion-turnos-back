@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -26,7 +27,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
             "OR LOWER(p.surname) LIKE LOWER(concat('%', :term, '%'))) " +
             "AND p.user.id = :userId")
     List<Patient> searchPatientByTermAndUserId(@Param("term") String term, @Param("userId") Long userId);
-    Patient findByDni(String dni);
+    Optional<Patient>  findByDni(String dni);
     boolean existsByDniAndUser(String dni, UserEntity user);
     @Query("SELECT p FROM Patient p WHERE p.id = :patientId AND p.user = :user")
     Patient findByPatientIdAndUserId(Long patientId, UserEntity user);

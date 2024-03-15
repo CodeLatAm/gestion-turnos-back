@@ -1,22 +1,15 @@
 package com.getion.turnos.service;
 
 import com.getion.turnos.enums.ShiftStatus;
-import com.getion.turnos.exception.HealthCenterNotFoundException;
-import com.getion.turnos.exception.PatientNotFoundException;
-import com.getion.turnos.exception.TurnConflictException;
-import com.getion.turnos.exception.TurnNotFoundException;
+import com.getion.turnos.exception.*;
 import com.getion.turnos.mapper.TurnMapper;
 import com.getion.turnos.model.entity.*;
 import com.getion.turnos.model.response.TurnResponse;
 import com.getion.turnos.repository.TurnRepository;
 import com.getion.turnos.service.injectionDependency.*;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.service.spi.InjectService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -180,5 +173,79 @@ public class TurnServiceImpl implements TurnService {
 
     }
 
+    @Override
+    public List<TurnResponse> searchTurnsByDateAndDni(String date, String dni, Long userId) {
+        UserEntity user = userService.findById(userId);
 
+        if(date.isEmpty() || dni.isEmpty()){
+            throw new PersonalizedIllegalArgumentException("Los parámetros de fecha y DNI no pueden estar vacíos");
+        }
+        Patient patient = patientService.findByDni(dni);
+        LocalDate endDate = getEndDate(date);
+        LocalDate startDate = LocalDate.now();
+        List<Turn> turns;
+        if(date.equalsIgnoreCase("Todos")){
+            turns = turnRepository.findByUserIdAndPatientDni(userId, dni);
+        } else {
+            // Obtener todos los turnos del usuario y DNI especificados
+            turns = turnRepository.findByUserIdAndPatientDni(userId, dni);
+            // Filtrar los turnos dentro del rango de fechas
+            turns = filterTurnsByDate(turns, startDate, endDate);
+        }
+
+        List<TurnResponse> responses = turnMapper.mapToTurnEntityList(turns);
+        return responses;
+    }
+
+    // Método para filtrar los turnos por fecha en memoria
+    private List<Turn> filterTurnsByDate(List<Turn> turns, LocalDate startDate, LocalDate endDate) {
+        List<Turn> filteredTurns = new ArrayList<>();
+        for (Turn turn : turns) {
+            // Verificar si la fecha del turno está dentro del rango especificado
+            if (turn.getDate().isAfter(startDate) && turn.getDate().isBefore(endDate)) {
+                filteredTurns.add(turn);
+            }
+        }
+        return filteredTurns;
+    }
+
+    private LocalDate getEndDate(String fecha) {
+        switch (fecha) {
+            case "Hoy":
+                return LocalDate.now();
+            case "Próximos 7 días":
+                return LocalDate.now().plusDays(7);
+            case "Los Próximos 15 días":
+                return LocalDate.now().plusDays(15);
+            case "El Próximo mes":
+                return LocalDate.now().plusMonths(1);
+            case "El Próximo año":
+                return LocalDate.now().plusYears(1);
+            default:
+
+                return LocalDate.now().plusDays(30);
+        }
+    }
+
+    @Override
+    public List<TurnResponse> searchTurnsByDateAndDniFilters(String date, String dni, Long userId) {
+        UserEntity user = userService.findById(userId);
+        if(date.isEmpty()){
+            throw new PersonalizedIllegalArgumentException("El parámetro fecha no puede estar vacío");
+        }
+        LocalDate endDate = getEndDate(date);
+        LocalDate startDate = LocalDate.now();
+        List<Turn> turns;
+        if(date.equalsIgnoreCase("Todos")) {
+            turns = turnRepository.findByUserIdAndPatientDniStartingWith(userId, dni.substring(0, Math.min(dni.length(), 3)));
+        } else {
+            // Obtener todos los turnos del usuario y DNI especificados
+            turns = turnRepository.findByUserIdAndPatientDniStartingWith(userId, dni.substring(0, Math.min(dni.length(), 3)));
+            // Filtrar los turnos dentro del rango de fechas
+            turns = filterTurnsByDate(turns, startDate, endDate);
+        }
+        List<TurnResponse> responses = turnMapper.mapToTurnEntityList(turns);
+        return responses;
+
+    }
 }

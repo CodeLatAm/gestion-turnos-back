@@ -87,12 +87,26 @@ public class TurnController {
             turnService.changeStatus(turnId, status);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Estado actualizado"));
     }
-
     @DeleteMapping("/delete/patient/{patientId}")
     public ResponseEntity<MessageResponse> deletePatient(@PathVariable Long patientId){
         turnService.deletePatient(patientId);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(HttpStatus.OK, "Paciente eliminado"));
     }
+    @GetMapping("/search-turns")
+    public ResponseEntity<List<TurnResponse>> searchTurnsByDateAndDni(@RequestParam String date,
+                                                                      @RequestParam String dni,
+                                                                      @NotNull @RequestParam Long userId){
+        List<TurnResponse> responses = turnService.searchTurnsByDateAndDni(date, dni, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+    @GetMapping("/filters")
+    public ResponseEntity<List<TurnResponse>> searchTurnsByDateAndDniFilters(@RequestParam String date,
+                                                                             @RequestParam String term,
+                                                                             @NotNull @RequestParam Long userId){
+        List<TurnResponse> responses = turnService.searchTurnsByDateAndDniFilters(date, term, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
 
 
 }
