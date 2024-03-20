@@ -1,8 +1,6 @@
 package com.getion.turnos.model.request;
 
 import com.getion.turnos.enums.PaymentEnum;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,12 +19,10 @@ public class PaymentRequest {
 
     @NotNull(message = "La fecha de la orden de pago es requerida")
     private LocalDate date;
-    @NotBlank(message = "El estado de la orden es requerida")
-    @Enumerated(EnumType.STRING)
+    @NotNull(message = "El estado de la orden es requerido")
     private PaymentEnum paymentEnum;
     @NotBlank(message = "La descripción es requerida")
     private String description;
     @NotNull(message = "El total es requerido")
     private BigDecimal total;
-
 }

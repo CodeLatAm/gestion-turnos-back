@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +42,8 @@ public class UserEntity{
     private ProfileEntity profile;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Patient> patientSet = new HashSet<>();
+    @OneToMany()
+    private List<Payment> payments = new ArrayList<>();
 
     public void addCenter(HealthCenterEntity center){
         centers.add(center);
