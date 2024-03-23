@@ -3,9 +3,9 @@ package com.getion.turnos.model.entity;
 import com.getion.turnos.enums.PaymentEnum;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -19,9 +19,20 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate date;
     @Enumerated(EnumType.STRING)
-    private PaymentEnum paymentEnum;
-    private String description;
+    @Column(name = "estado_pago")
+    private PaymentEnum paymentStatus;
     private BigDecimal total;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_creacion")
+    private LocalDate dateCreated;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "ultima_actualizacion")
+    private LocalDate lastUpdate;
+    @Column(name = "order_reference_external")
+    private String orderReferenceExternal;
+    @Column(name = "preference_id_mpago")
+    private String preferenceIdPaymentMPago;
+    @ManyToOne()
+    private UserEntity user;
 }
