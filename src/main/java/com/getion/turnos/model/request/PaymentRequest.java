@@ -1,5 +1,7 @@
 package com.getion.turnos.model.request;
 
+import com.getion.turnos.enums.PaymentEnum;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +14,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class PaymentRequest {
+
     @NotNull(message = "El userId es requerido")
     private Long userId;
     @NotNull(message = "El total es requerido")
     private BigDecimal total;
-
 }

@@ -12,10 +12,14 @@ import com.getion.turnos.service.injectionDependency.PaymentService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
+import com.getion.turnos.mapper.PaymentMapper;
+import com.getion.turnos.model.entity.Payment;
+import com.getion.turnos.model.request.PaymentRequest;
+import com.getion.turnos.repository.PaymentRepository;
+import com.getion.turnos.service.injectionDependency.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -44,6 +48,5 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(order);
         return paymentMapper.mapToPaymentRequest(order);
     }
-
 
 }
