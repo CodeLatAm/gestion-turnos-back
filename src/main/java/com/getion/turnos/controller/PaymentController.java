@@ -1,7 +1,10 @@
 package com.getion.turnos.controller;
 
 import com.getion.turnos.model.request.PaymentRequest;
-import com.getion.turnos.model.response.MessageResponse;
+import com.getion.turnos.model.response.PaymentResponse;
+import com.getion.turnos.service.injectionDependency.PaymentService;
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
 import com.getion.turnos.service.injectionDependency.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +21,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/create")
-    public ResponseEntity<MessageResponse> createPayment(@Valid @RequestBody PaymentRequest request){
-        paymentService.createPayment(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse(HttpStatus.CREATED, "Pago creado"));
+    public ResponseEntity<PaymentResponse> createPayment(@Valid @RequestBody PaymentRequest request) throws MPException, MPApiException {
+        PaymentResponse response = paymentService.createPayment(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 }

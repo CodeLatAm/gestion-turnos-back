@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -17,12 +15,8 @@ import java.time.LocalDate;
 @Builder
 public class PaymentRequest {
 
-    @NotNull(message = "La fecha de la orden de pago es requerida")
-    private LocalDate date;
-    @NotNull(message = "El estado de la orden es requerido")
-    private PaymentEnum paymentEnum;
-    @NotBlank(message = "La descripción es requerida")
-    private String description;
+    @NotNull(message = "El userId es requerido")
+    private Long userId;
     @NotNull(message = "El total es requerido")
     private BigDecimal total;
 }
