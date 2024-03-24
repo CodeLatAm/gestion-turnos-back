@@ -18,7 +18,7 @@ spring:
 
 mercado:
   pago:
-    access-token: TEST-5242871847657907-032222-3e50537cdb44297863abdc1eea89c182-1740569270
+    access-token: 
 
 server:
   url: https://049b-2800-810-50c-864-9425-2d6d-9105-e3f4.ngrok-free.app
