@@ -12,7 +12,7 @@ public class TestUtils {
                 .lastname("Acevedo")
                 .password("12345678")
                 .title("DR")
-                .country("ARG")
+                .country("Agentina")
                 .username("abel@gmail.com")
                 .build();
     }

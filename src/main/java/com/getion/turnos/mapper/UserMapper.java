@@ -7,6 +7,7 @@ import com.getion.turnos.model.request.ProfileRequest;
 import com.getion.turnos.model.request.RegisterRequest;
 import com.getion.turnos.model.response.*;
 import lombok.Builder;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -105,5 +106,17 @@ public class UserMapper {
                 .build();
 
 
+    }
+
+    public MessageResponse MapToMessageResponse(UserEntity user) {
+        MessageResponse response = new MessageResponse();
+        if(user.isItsVip()){
+            response.setMessage("ACTIVADO");
+            response.setStatus(HttpStatus.OK);
+        }else {
+            response.setMessage("DESACTIVADO");
+            response.setStatus(HttpStatus.OK);
+        }
+        return response;
     }
 }

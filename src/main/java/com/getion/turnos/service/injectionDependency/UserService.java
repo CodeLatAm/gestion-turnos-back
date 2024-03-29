@@ -3,6 +3,7 @@ package com.getion.turnos.service.injectionDependency;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.response.CurrentUserResponse;
 import com.getion.turnos.model.response.HealthCenterResponse;
+import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.model.response.UserResponse;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface UserService {
     CurrentUserResponse getCurrentUser();
 
     List<HealthCenterResponse> getAllCenterForUser(Long id);
+
+    Optional<UserEntity> findByUsername(String userEmail);
+
+    MessageResponse verifyStatusUser(Long userId);
 }

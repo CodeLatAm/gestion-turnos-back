@@ -63,6 +63,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/patients/{userId}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/patients/term").permitAll()
                 .requestMatchers(HttpMethod.GET, "/patients/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/mercado-pago/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/payments/**").permitAll()
                 .anyRequest().permitAll();
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
