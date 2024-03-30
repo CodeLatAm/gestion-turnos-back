@@ -21,7 +21,7 @@ mercado:
     access-token: APP_USR-7191271732281686-032410-f2142bfb8ec8935f88715548c2f64c45-1740569270
 
 server:
-  url: https://9583-2800-810-50c-864-ac72-5b37-2743-c73e.ngrok-free.app
+  url: https://3fcd-2800-810-50c-864-a1ad-2c8e-29bf-874f.ngrok-free.app
 
 # JWT
 jwt:

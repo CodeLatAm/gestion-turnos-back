@@ -17,6 +17,7 @@ public class PaymentMapper {
                 .lastUpdate(order.getLastUpdate())
                 .preferenceIdPaymentMPago(order.getPreferenceIdPaymentMPago())
                 .orderReferenceExternal(order.getOrderReferenceExternal())
+
                 .user(this.mapToUser(order.getUser()))
                 .build();
     }

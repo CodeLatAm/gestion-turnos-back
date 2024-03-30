@@ -22,5 +22,6 @@ public class PaymentResponse {
     private LocalDate lastUpdate;
     private String orderReferenceExternal;
     private String preferenceIdPaymentMPago;
+    //private String initPoint;
     private UserPaymentResponse user;
 }

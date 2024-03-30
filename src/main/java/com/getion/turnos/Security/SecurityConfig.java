@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/me").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/{userId}/status").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/centers/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/centers/user/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/centers/user/{userId}").permitAll()

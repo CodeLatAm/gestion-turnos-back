@@ -1,12 +1,11 @@
 package com.getion.turnos.model.response;
 
-import com.getion.turnos.model.entity.HealthCenterEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

@@ -50,6 +50,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .currencyId("ARS")
                 .title("Plan pro")
                 .description("Activando plan pro")
+                .pictureUrl("src/main/resources/static/logo.png")
                 .quantity(1)
                 .unitPrice(order.getTotal())
                 .build();
@@ -61,9 +62,9 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .build();
         // Agrego url de respuestas
         PreferenceBackUrlsRequest backUrlsRequest = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:4200/payment/success") // <-- Aquí se cambia la URL de éxito a la URL de respuesta genérica
-                .failure("http://localhost:4200/payment/failure") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
-                .pending("http://localhost:4200/payment/pending") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
+                .success("http://localhost:4200/home/payments") // <-- Aquí se cambia la URL de éxito a la URL de respuesta genérica
+                .failure("http://localhost:4200/home/payments") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
+                .pending("http://localhost:4200/home/payments") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
                 .build();
 
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
@@ -79,12 +80,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .expires(true)
                 .expirationDateFrom(OffsetDateTime.now())
                 .expirationDateTo(OffsetDateTime.now().plus(Duration.ofHours(24)))
-                .autoReturn("approved")
+                //.autoReturn("approved")
                 .build();
         Preference preference = client.create(preferenceRequest);
         this.createLogsForPaymentOrder(preference);
 
-        return preference.getSandboxInitPoint();
+        return preference.getInitPoint();
     }
 
     private void createLogsForPaymentOrder(Preference preference) {
