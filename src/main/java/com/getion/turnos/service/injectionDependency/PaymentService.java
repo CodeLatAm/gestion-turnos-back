@@ -7,4 +7,5 @@ import com.mercadopago.exceptions.MPException;
 
 public interface PaymentService {
     PaymentResponse createPayment(PaymentRequest request) throws MPException, MPApiException;
+
 }
