@@ -2,6 +2,7 @@ package com.getion.turnos.controller;
 
 import com.getion.turnos.model.response.CurrentUserResponse;
 import com.getion.turnos.model.response.HealthCenterResponse;
+import com.getion.turnos.model.response.MessageResponse;
 import com.getion.turnos.model.response.UserResponse;
 import com.getion.turnos.service.injectionDependency.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,10 @@ public class UserController {
         List<HealthCenterResponse> responses = userService.getAllCenterForUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
 
+    }
+    @GetMapping("/{userId}/status")
+    public ResponseEntity<MessageResponse> verifyStatusUser(@PathVariable Long userId){
+        MessageResponse response = userService.verifyStatusUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

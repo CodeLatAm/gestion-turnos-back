@@ -1,11 +1,15 @@
 package com.getion.turnos.service;
 
 import com.getion.turnos.enums.PaymentEnum;
+import com.getion.turnos.exception.PersonalizedIllegalArgumentException;
 import com.getion.turnos.model.entity.Payment;
+import com.getion.turnos.model.entity.UserEntity;
+import com.getion.turnos.model.entity.Voucher;
 import com.getion.turnos.repository.PaymentRepository;
 import com.getion.turnos.service.injectionDependency.MercadoPagoService;
-import com.mercadopago.MercadoPagoConfig;
-import com.mercadopago.client.common.PhoneRequest;
+import com.getion.turnos.service.injectionDependency.UserService;
+import com.getion.turnos.service.injectionDependency.VoucherService;
+import com.mercadopago.MercadoPagoConfig;;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
@@ -16,14 +20,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -35,6 +37,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
     @Value("${server.url}")
     private String serverUrl;
     private final PaymentRepository paymentRepository;
+    private final UserService userService;
+    private final VoucherService voucherService;
 
     @Override
     public String createOrderPayment(Payment order) throws MPException, MPApiException {
@@ -46,6 +50,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .currencyId("ARS")
                 .title("Plan pro")
                 .description("Activando plan pro")
+                .pictureUrl("src/main/resources/static/logo.png")
                 .quantity(1)
                 .unitPrice(order.getTotal())
                 .build();
@@ -57,9 +62,9 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .build();
         // Agrego url de respuestas
         PreferenceBackUrlsRequest backUrlsRequest = PreferenceBackUrlsRequest.builder()
-                .success("http://localhost:4200/payment/success") // <-- Aquí se cambia la URL de éxito a la URL de respuesta genérica
-                .failure("http://localhost:4200/payment/failure") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
-                .pending("http://localhost:4200/payment/pending") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
+                .success("http://localhost:4200/home/payments") // <-- Aquí se cambia la URL de éxito a la URL de respuesta genérica
+                .failure("http://localhost:4200/home/payments") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
+                .pending("http://localhost:4200/home/payments") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
                 .build();
 
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
@@ -78,6 +83,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 //.autoReturn("approved")
                 .build();
         Preference preference = client.create(preferenceRequest);
+        this.createLogsForPaymentOrder(preference);
+
+        return preference.getInitPoint();
+    }
+
+    private void createLogsForPaymentOrder(Preference preference) {
         log.info("Info de la preferencia del pago:");
         log.info("ID: " + preference.getId());
         log.info("Items:");
@@ -112,79 +123,27 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         log.info("Init Point: " + preference.getInitPoint());
         log.info("Sandbox Init Point: " + preference.getSandboxInitPoint());
         log.info("Date Created: " + preference.getDateCreated());
-        return preference.getSandboxInitPoint();
     }
 
     @Override
     public boolean processNotificationWebhook(Map<String, Object> data) {
+        log.info("Metodo processNotificationWebhook():");
         if (isValidNotificationData(data)) {
             String idPayment = extractPaymentId(data);
-
+            log.info("idPayment: " + idPayment);
             if (idPayment != null) {
                 try {
                     com.mercadopago.resources.payment.Payment payment = getPaymentById(idPayment);
-                    log.info("Metodo processNotificationWebhook():");
-                    log.info("Información del pago:");
-                    log.info("ID: " + payment.getId());
-                    log.info("Fecha de creación: " + payment.getDateCreated());
-                    log.info("Fecha de aprobación: " + payment.getDateApproved());
-                    log.info("Última fecha de actualización: " + payment.getDateLastUpdated());
-                    log.info("Fecha de expiración: " + payment.getDateOfExpiration());
-                    log.info("Fecha de liberación del dinero: " + payment.getMoneyReleaseDate());
-                    log.info("Esquema de liberación de dinero: " + payment.getMoneyReleaseSchema());
-                    log.info("Tipo de operación: " + payment.getOperationType());
-                    log.info("ID del emisor: " + payment.getIssuerId());
-                    log.info("ID del método de pago: " + payment.getPaymentMethodId());
-                    log.info("ID del tipo de pago: " + payment.getPaymentTypeId());
-                    log.info("Estado del pago: " + payment.getStatus());
-                    log.info("Detalles del estado: " + payment.getStatusDetail());
-                    log.info("ID de la moneda: " + payment.getCurrencyId());
-                    log.info("Descripción: " + payment.getDescription());
-                    log.info("Modo en vivo: " + payment.isLiveMode());
-                    log.info("ID del patrocinador: " + payment.getSponsorId());
-                    log.info("Código de autorización: " + payment.getAuthorizationCode());
-                    log.info("ID del integrador: " + payment.getIntegratorId());
-                    log.info("ID de la plataforma: " + payment.getPlatformId());
-                    log.info("ID de la corporación: " + payment.getCorporationId());
-                    log.info("ID del colector: " + payment.getCollectorId());
-                    log.info("Datos del pagador: " + payment.getPayer());
-                    log.info("Metadatos: " + payment.getMetadata());
-                    log.info("Información adicional: " + payment.getAdditionalInfo());
-                    log.info("Orden asociada: " + payment.getOrder());
-                    log.info("Referencia externa: " + payment.getExternalReference());
-                    log.info("Monto de la transacción: " + payment.getTransactionAmount());
-                    log.info("Monto de la transacción devuelto: " + payment.getTransactionAmountRefunded());
-                    log.info("Monto del cupón: " + payment.getCouponAmount());
-                    log.info("ID de diferenciación de precios: " + payment.getDifferentialPricingId());
-                    log.info("Cuotas: " + payment.getInstallments());
-                    log.info("Detalles de la transacción: " + payment.getTransactionDetails());
-                    log.info("Detalles de la tarifa: " + payment.getFeeDetails());
-                    log.info("Capturado: " + payment.isCaptured());
-                    log.info("Modo binario: " + payment.isBinaryMode());
-                    log.info("ID de llamada para autorización: " + payment.getCallForAuthorizeId());
-                    log.info("Descriptor de declaración: " + payment.getStatementDescriptor());
-                    log.info("Tarjeta: " + payment.getCard());
-                    log.info("URL de notificación: " + payment.getNotificationUrl());
-                    log.info("URL de callback: " + payment.getCallbackUrl());
-                    log.info("Modo de procesamiento: " + payment.getProcessingMode());
-                    log.info("ID de la cuenta del comerciante: " + payment.getMerchantAccountId());
-                    log.info("Número del comerciante: " + payment.getMerchantNumber());
-                    log.info("Código de cupón: " + payment.getCouponCode());
-                    log.info("Monto neto: " + payment.getNetAmount());
-                    log.info("ID de la opción del método de pago: " + payment.getPaymentMethodOptionId());
-                    log.info("Impuestos: " + payment.getTaxes());
-                    log.info("Monto de impuestos: " + payment.getTaxesAmount());
-                    log.info("Moneda contraria: " + payment.getCounterCurrency());
-                    log.info("Monto de envío: " + payment.getShippingAmount());
-                    log.info("ID de POS: " + payment.getPosId());
-                    log.info("ID de tienda: " + payment.getStoreId());
-                    log.info("Esquema de deducción: " + payment.getDeductionSchema());
-                    log.info("Reembolsos: " + payment.getRefunds());
-                    log.info("Punto de interacción: " + payment.getPointOfInteraction());
-                    log.info("Método de pago: " + payment.getPaymentMethod());
-                    log.info("Información de 3DS: " + payment.getThreeDSInfo());
-                    log.info("Metadatos internos: " + payment.getInternalMetadata());
+                    this.createLogsProcessNotificationWebhook(payment);
+
                     if (isPaymentApproved(payment)) {
+                        String userEmail = payment.getPayer().getEmail();
+                        log.info("Email en processNotificationWebhook():" + userEmail);
+                        Optional<UserEntity> user = userService.findByUsername(userEmail);
+
+                        Voucher voucher = this.createVoucher(payment);
+                        voucher.setUser(user.get());
+                        voucherService.save(voucher);
                         updateOrderStatus(payment);
                         return true;
                     }
@@ -194,6 +153,88 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
             }
         }
         return false;
+    }
+
+    private Voucher createVoucher(com.mercadopago.resources.payment.Payment payment) {
+        return Voucher.builder()
+                .idTransaccion(payment.getId())
+                .creationDateTime(payment.getDateCreated())
+                .approvalDateTime(payment.getDateApproved())
+                .statusDetail(payment.getStatusDetail())
+                .status(payment.getStatus())
+                .currencyId(payment.getCurrencyId())
+                .transactionAmount(payment.getTransactionAmount())
+                .installments(payment.getInstallments())
+                .paymentTypeId(payment.getPaymentTypeId())
+                .description(payment.getDescription())
+                .build();
+    }
+
+    private void createLogsProcessNotificationWebhook(com.mercadopago.resources.payment.Payment payment) {
+        log.info("Metodo processNotificationWebhook():");
+        log.info("Información del pago:");
+        log.info("ID: " + payment.getId());//este
+        log.info("Fecha de creación: " + payment.getDateCreated());//este
+        log.info("Fecha de aprobación: " + payment.getDateApproved());//este
+        log.info("Última fecha de actualización: " + payment.getDateLastUpdated());
+        log.info("Fecha de expiración: " + payment.getDateOfExpiration());
+        log.info("Fecha de liberación del dinero: " + payment.getMoneyReleaseDate());
+        log.info("Esquema de liberación de dinero: " + payment.getMoneyReleaseSchema());
+        log.info("Tipo de operación: " + payment.getOperationType());
+        log.info("ID del emisor: " + payment.getIssuerId());
+        log.info("ID del método de pago: " + payment.getPaymentMethodId());
+        log.info("ID del tipo de pago: " + payment.getPaymentTypeId());
+        log.info("Estado del pago: " + payment.getStatus());//este
+        log.info("Detalles del estado: " + payment.getStatusDetail());//este
+        log.info("ID de la moneda: " + payment.getCurrencyId());//este
+        log.info("Descripción: " + payment.getDescription());
+        log.info("Modo en vivo: " + payment.isLiveMode());
+        log.info("ID del patrocinador: " + payment.getSponsorId());
+        log.info("Código de autorización: " + payment.getAuthorizationCode());
+        log.info("ID del integrador: " + payment.getIntegratorId());
+        log.info("ID de la plataforma: " + payment.getPlatformId());
+        log.info("ID de la corporación: " + payment.getCorporationId());
+        log.info("ID del colector: " + payment.getCollectorId());
+        log.info("Datos del pagador:");
+        log.info("Nombre: " + payment.getPayer().getFirstName());
+        log.info("Nombre: " + payment.getPayer().getLastName());
+        log.info("Correo electrónico: " + payment.getPayer().getEmail());
+        log.info("Metadatos: " + payment.getMetadata());
+        log.info("Información adicional: " + payment.getAdditionalInfo());
+        log.info("Orden asociada: " + payment.getOrder());
+        log.info("Referencia externa: " + payment.getExternalReference());
+        log.info("Monto de la transacción: " + payment.getTransactionAmount());//este
+        log.info("Monto de la transacción devuelto: " + payment.getTransactionAmountRefunded());
+        log.info("Monto del cupón: " + payment.getCouponAmount());
+        log.info("ID de diferenciación de precios: " + payment.getDifferentialPricingId());
+        log.info("Cuotas: " + payment.getInstallments());//este
+        log.info("Detalles de la transacción: " + payment.getTransactionDetails());
+        log.info("Detalles de la tarifa: " + payment.getFeeDetails());
+        log.info("Capturado: " + payment.isCaptured());
+        log.info("Modo binario: " + payment.isBinaryMode());
+        log.info("ID de llamada para autorización: " + payment.getCallForAuthorizeId());
+        log.info("Descriptor de declaración: " + payment.getStatementDescriptor());
+        log.info("Tarjeta: " + payment.getCard().toString());//este
+        log.info("URL de notificación: " + payment.getNotificationUrl());
+        log.info("URL de callback: " + payment.getCallbackUrl());
+        log.info("Modo de procesamiento: " + payment.getProcessingMode());
+        log.info("ID de la cuenta del comerciante: " + payment.getMerchantAccountId());
+        log.info("Número del comerciante: " + payment.getMerchantNumber());
+        log.info("Código de cupón: " + payment.getCouponCode());
+        log.info("Monto neto: " + payment.getNetAmount());
+        log.info("ID de la opción del método de pago: " + payment.getPaymentMethodOptionId());
+        log.info("Impuestos: " + payment.getTaxes());
+        log.info("Monto de impuestos: " + payment.getTaxesAmount());
+        log.info("Moneda contraria: " + payment.getCounterCurrency());
+        log.info("Monto de envío: " + payment.getShippingAmount());
+        log.info("ID de POS: " + payment.getPosId());
+        log.info("ID de tienda: " + payment.getStoreId());
+        log.info("Esquema de deducción: " + payment.getDeductionSchema());
+        log.info("Reembolsos: " + payment.getRefunds());
+        log.info("Punto de interacción: " + payment.getPointOfInteraction());
+        log.info("Método de pago: " + payment.getPaymentMethod().toString());//este
+        log.info("Información de 3DS: " + payment.getThreeDSInfo());
+        log.info("Metadatos internos: " + payment.getInternalMetadata());
     }
 
     private boolean isValidNotificationData(Map<String, Object> data) {
@@ -216,7 +257,12 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
     }
 
     private boolean isPaymentApproved(com.mercadopago.resources.payment.Payment payment) {
-        return payment.getStatus().equals("approved") && payment.getStatusDetail().equals("accredited");
+        return payment.getStatus().equals("approved") && payment.getStatusDetail().equals("accredited")
+                || payment.getStatus().equals("rejected")
+                || payment.getStatus().equals("cancelled");
+    }
+    private boolean isPaymentRejected(com.mercadopago.resources.payment.Payment payment){
+        return payment.getStatus().equals("rejected") && payment.getStatusDetail().equals("cc_rejected_other_reason");
     }
 
     private void updateOrderStatus(com.mercadopago.resources.payment.Payment payment) {
@@ -226,17 +272,28 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
         if (payment.getStatus().equals("approved")) {
             order.setPaymentStatus(PaymentEnum.APROBADO);
+            log.info("El pago ha sido aprobado y acreditado.");
             order.setLastUpdate(LocalDate.now());
+            order.updateStatus();
             paymentRepository.save(order);
         }
-        /*if (payment.getStatus().equals(PaymentEnum.PENDIENTE)) {
-            order.setPaymentStatus(PaymentEnum.PENDIENTE);
-            order.setLastUpdate(LocalDate.now());
+        if (payment.getStatus().equals("pending")) {
+            log.info("El usuario no ha concluido el proceso de pago (por ejemplo, al generar un pago mediante boleto, éste concluirá en el momento en que el usuario realiza el pago en el lugar seleccionado).");
+            throw new PersonalizedIllegalArgumentException("El usuario no ha concluido el proceso de pago (por ejemplo, al generar un pago mediante boleto, éste concluirá en el momento en que el usuario realiza el pago en el lugar seleccionado");
+            //order.setPaymentStatus(PaymentEnum.PENDIENTE);
+            //order.setLastUpdate(LocalDate.now());
+            //paymentRepository.save(order);
         }
-        if (payment.getStatus().equals(PaymentEnum.RECHAZADO)) {
-            order.setPaymentStatus(PaymentEnum.RECHAZADO);
-            order.setLastUpdate(LocalDate.now());
-        }*/
+        if (payment.getStatus().equals("rejected")) {
+            log.info("El pago fue rechazado (el usuario puede intentar pagar nuevamente).");
+            throw new PersonalizedIllegalArgumentException("El pago fue rechazado (el usuario puede intentar pagar nuevamente).");
+
+        }
+        if (payment.getStatus().equals("cancelled")){
+            log.info("El pago fue rechazado (el usuario puede intentar pagar nuevamente).");
+            throw new PersonalizedIllegalArgumentException("El pago fue rechazado (el usuario puede intentar pagar nuevamente).");
+        }
+
 
     }
 }

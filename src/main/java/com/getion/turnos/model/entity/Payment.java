@@ -6,7 +6,6 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,4 +34,8 @@ public class Payment {
     private String preferenceIdPaymentMPago;
     @ManyToOne()
     private UserEntity user;
+
+    public void updateStatus(){
+        user.setItsVip(true);
+    }
 }

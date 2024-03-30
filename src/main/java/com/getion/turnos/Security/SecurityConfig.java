@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .requestMatchers(HttpMethod.GET,"/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/me").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/{userId}/status").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users/centers/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/centers/user/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/centers/user/{userId}").permitAll()
@@ -63,6 +64,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/patients/{userId}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/patients/term").permitAll()
                 .requestMatchers(HttpMethod.GET, "/patients/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/mercado-pago/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/payments/**").permitAll()
                 .anyRequest().permitAll();
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
