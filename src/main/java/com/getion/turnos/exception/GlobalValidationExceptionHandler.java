@@ -105,4 +105,9 @@ public class GlobalValidationExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(VoucherNotFoundException.class)
+    public ResponseEntity<String> handleVoucherNotFountException(VoucherNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }

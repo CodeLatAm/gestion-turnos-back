@@ -6,6 +6,7 @@ import com.getion.turnos.model.entity.Payment;
 import com.getion.turnos.model.entity.UserEntity;
 import com.getion.turnos.model.entity.Voucher;
 import com.getion.turnos.repository.PaymentRepository;
+import com.getion.turnos.repository.VoucherRepository;
 import com.getion.turnos.service.injectionDependency.MercadoPagoService;
 import com.getion.turnos.service.injectionDependency.UserService;
 import com.getion.turnos.service.injectionDependency.VoucherService;
@@ -38,7 +39,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
     private String serverUrl;
     private final PaymentRepository paymentRepository;
     private final UserService userService;
-    private final VoucherService voucherService;
+    //private final VoucherService voucherService;
+    private final VoucherRepository voucherRepository;
 
     @Override
     public String createOrderPayment(Payment order) throws MPException, MPApiException {
@@ -48,9 +50,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         PreferenceClient client = new PreferenceClient();
         PreferenceItemRequest preferenceItemRequest = PreferenceItemRequest.builder()
                 .currencyId("ARS")
-                .title("Plan pro")
-                .description("Activando plan pro")
-                .pictureUrl("src/main/resources/static/logo.png")
+                .title("Alta plan pro")
+                .description("Alta plan pro")
                 .quantity(1)
                 .unitPrice(order.getTotal())
                 .build();
@@ -83,6 +84,54 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 //.autoReturn("approved")
                 .build();
         Preference preference = client.create(preferenceRequest);
+        this.createLogsForPaymentOrder(preference);
+
+        return preference.getInitPoint();
+    }
+
+    @Override
+    public String updatePayment(Voucher voucherUpdate) throws MPException, MPApiException {
+        MercadoPagoConfig.setAccessToken(accessToken);
+        log.info("Entrando al metodo updatePayment() en MercadoPagoServiceImpl");
+        // Crea un objeto de preferencia
+        PreferenceClient client = new PreferenceClient();
+        PreferenceItemRequest preferenceItemRequest = PreferenceItemRequest.builder()
+                .currencyId("ARS")
+                .title("Cuota fija, plan Pago")
+                .description("Cuota, fija plan Pago")
+                .pictureUrl("")
+                .quantity(1)
+                .unitPrice(voucherUpdate.getTransactionAmount())
+                .build();
+        // Agrego informacion del usuario
+        PreferencePayerRequest payerRequest = PreferencePayerRequest.builder()
+                .name(voucherUpdate.getUser().getName())
+                .email(voucherUpdate.getUser().getUsername())
+                .surname(voucherUpdate.getUser().getLastname())
+                .build();
+        // Agrego url de respuestas
+        PreferenceBackUrlsRequest backUrlsRequest = PreferenceBackUrlsRequest.builder()
+                .success("http://localhost:4200/home/payments") // <-- Aquí se cambia la URL de éxito a la URL de respuesta genérica
+                .failure("http://localhost:4200/home/payments") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
+                .pending("http://localhost:4200/home/payments") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
+                .build();
+        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                .items(Collections.singletonList(preferenceItemRequest))  // Utiliza Collections.singletonList para crear una lista con un solo elemento
+                .payer(payerRequest)
+                .backUrls(backUrlsRequest)
+                .metadata(Map.of(
+                        "purchase_reference", voucherUpdate.getOrderReferenceExternal()  // Corregido el nombre de la clave
+                ))
+                .marketplace("Agenda de turnos API")
+                .notificationUrl(serverUrl + "/mercado-pago/notify/voucher?source_news=webhooks")
+                .binaryMode(true)
+                .expires(true)
+                .expirationDateFrom(OffsetDateTime.now())
+                .expirationDateTo(OffsetDateTime.now().plus(Duration.ofHours(24)))
+                //.autoReturn("approved")
+                .build();
+        Preference preference = client.create(preferenceRequest);
+
         this.createLogsForPaymentOrder(preference);
 
         return preference.getInitPoint();
@@ -143,8 +192,49 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 
                         Voucher voucher = this.createVoucher(payment);
                         voucher.setUser(user.get());
-                        voucherService.save(voucher);
+                        //voucherService.save(voucher);
+                        voucherRepository.save(voucher);
                         updateOrderStatus(payment);
+                        return true;
+                    }
+                } catch (MPException | MPApiException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean processNotificationWebhookVoucher(Map<String, Object> data) {
+        log.info("Metodo processNotificationWebhookVoucher():");
+        if (isValidNotificationData(data)) {
+            String idPayment = extractPaymentId(data);
+            log.info("idPayment: " + idPayment);
+            if (idPayment != null) {
+                try {
+                    com.mercadopago.resources.payment.Payment payment = getPaymentById(idPayment);
+                    this.createLogsProcessNotificationWebhook(payment);
+
+                    if (isPaymentApproved(payment)) {
+                        String userEmail = payment.getPayer().getEmail();
+                        log.info("Email en processNotificationWebhookVoucher():" + userEmail);
+                        Optional<UserEntity> user = userService.findByUsername(userEmail);
+                        String purchaseReference = (String) payment.getMetadata().get("purchase_reference");
+                        log.info("REFERENCIA EN processNotificationWebhookVoucher()" + purchaseReference.toString());
+                        Voucher existingVoucher = voucherRepository.findByOrderReferenceExternal(purchaseReference)
+                                .orElseThrow(() -> new RuntimeException("Voucher not found with reference: " + purchaseReference));
+
+                        existingVoucher.setStatus("approved");
+                        existingVoucher.setApprovalDateTime(OffsetDateTime.now());
+                        existingVoucher.setCurrencyId(payment.getCurrencyId());
+                        existingVoucher.setIdTransaccion(payment.getId());
+                        existingVoucher.setPaymentTypeId(payment.getPaymentTypeId());
+                        existingVoucher.setInstallments(payment.getInstallments());
+                        existingVoucher.setStatusDetail(payment.getStatusDetail());
+                        voucherRepository.save(existingVoucher);
+
+                        //updateOrderStatus(payment);
                         return true;
                     }
                 } catch (MPException | MPApiException e) {
@@ -260,9 +350,6 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
         return payment.getStatus().equals("approved") && payment.getStatusDetail().equals("accredited")
                 || payment.getStatus().equals("rejected")
                 || payment.getStatus().equals("cancelled");
-    }
-    private boolean isPaymentRejected(com.mercadopago.resources.payment.Payment payment){
-        return payment.getStatus().equals("rejected") && payment.getStatusDetail().equals("cc_rejected_other_reason");
     }
 
     private void updateOrderStatus(com.mercadopago.resources.payment.Payment payment) {

@@ -24,4 +24,6 @@ public interface UserService {
     Optional<UserEntity> findByUsername(String userEmail);
 
     MessageResponse verifyStatusUser(Long userId);
+
+    List<UserEntity> findByItsVip(boolean b);
 }

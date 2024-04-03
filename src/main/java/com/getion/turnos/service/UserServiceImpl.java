@@ -102,5 +102,12 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
+    public List<UserEntity> findByItsVip(boolean b) {
+        log.info("Entrando al metodo findByItsVip() en userServiceImpl");
+        List<UserEntity> isVipUsers = userRepository.findByItsVip(b);
+        return isVipUsers;
+    }
+
 
 }

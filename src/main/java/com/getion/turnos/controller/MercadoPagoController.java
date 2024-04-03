@@ -28,4 +28,14 @@ public class MercadoPagoController {
         else
             return new ResponseEntity<>(  "PAYMENT REQUIERED", HttpStatus.PAYMENT_REQUIRED);
     }
+    @PostMapping("/notify/voucher")
+    public ResponseEntity<String> processNotificationWebhookVoucher(@RequestBody Map<String, Object> values){
+        log.info("Entrando al controller mercadoPagoNotificationPayment()");
+        if(mercadoPagoService.processNotificationWebhookVoucher(values)) {
+
+            return ResponseEntity.ok("ACCEPTED");
+        }
+        else
+            return new ResponseEntity<>(  "PAYMENT REQUIERED", HttpStatus.PAYMENT_REQUIRED);
+    }
 }

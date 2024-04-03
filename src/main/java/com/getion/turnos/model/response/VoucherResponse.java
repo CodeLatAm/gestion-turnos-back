@@ -1,5 +1,6 @@
 package com.getion.turnos.model.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.getion.turnos.model.entity.UserEntity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,9 @@ public class VoucherResponse {
 
     private Long id;
     private Long idTransaccion;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private OffsetDateTime creationDateTime;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private OffsetDateTime approvalDateTime;
     private String description;
     private String statusDetail;
@@ -27,5 +30,6 @@ public class VoucherResponse {
     private BigDecimal transactionAmount;
     private String status;
     private String paymentTypeId;
+    private String initPoint;
     private UserPaymentResponse user;
 }

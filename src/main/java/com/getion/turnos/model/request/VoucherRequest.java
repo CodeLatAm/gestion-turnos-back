@@ -5,18 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentRequest {
+public class VoucherRequest {
+
     @NotNull(message = "El userId es requerido")
     private Long userId;
     @NotNull(message = "El total es requerido")
     private BigDecimal total;
-    private Long voucherId;
 
+    private Long voucherId;
 
 }
