@@ -6,6 +6,7 @@ import com.getion.turnos.model.response.PaymentResponse;
 import com.getion.turnos.service.injectionDependency.PaymentService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
+import com.getion.turnos.service.injectionDependency.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,6 @@ public class PaymentController {
 
     @PostMapping("/create")
     public ResponseEntity<PaymentResponse> createPayment(@Valid @RequestBody PaymentRequest request) throws MPException, MPApiException {
-
         PaymentResponse response = paymentService.createPayment(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -31,6 +31,5 @@ public class PaymentController {
         PaymentResponse response = paymentService.createPaymentVoucher(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
 }

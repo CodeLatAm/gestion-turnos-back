@@ -12,11 +12,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class PaymentRequest {
+
     @NotNull(message = "El userId es requerido")
     private Long userId;
     @NotNull(message = "El total es requerido")
     private BigDecimal total;
     private Long voucherId;
+
 
 
 }

@@ -16,7 +16,6 @@ import com.mercadopago.exceptions.MPException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -61,6 +60,5 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(order);
         return paymentMapper.mapToPaymentRequest(order);
     }
-
 
 }
