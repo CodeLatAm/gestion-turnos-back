@@ -16,7 +16,7 @@ public class VoucherMapper {
                 .collect(Collectors.toList());
     }
 
-    private VoucherResponse mapToVoucherResponse(Voucher voucher) {
+    public VoucherResponse mapToVoucherResponse(Voucher voucher) {
         return VoucherResponse.builder()
                 .id(voucher.getId())
                 .approvalDateTime(voucher.getApprovalDateTime())
@@ -30,6 +30,7 @@ public class VoucherMapper {
                 .statusDetail(voucher.getStatusDetail())
                 .transactionAmount(voucher.getTransactionAmount())
                 .user(this.mapToUser(voucher.getUser()))
+                .initPoint(voucher.getInitPoint())
                 .build();
     }
 
@@ -45,4 +46,6 @@ public class VoucherMapper {
                 .profile(null)
                 .build();
     }
+
+
 }

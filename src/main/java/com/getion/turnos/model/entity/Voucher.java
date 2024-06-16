@@ -1,5 +1,6 @@
 package com.getion.turnos.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,9 @@ public class Voucher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long idTransaccion;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private OffsetDateTime creationDateTime;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private OffsetDateTime approvalDateTime;
     private String description;
     private String statusDetail;
@@ -28,6 +31,10 @@ public class Voucher {
     private BigDecimal transactionAmount;
     private String status;
     private String paymentTypeId;
+    @Transient
+    private String initPoint;
+    @Column(name = "order_reference_external")
+    private String orderReferenceExternal;
     @ManyToOne
     private UserEntity user;
 }
