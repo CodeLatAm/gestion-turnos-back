@@ -21,7 +21,7 @@ mercado:
     access-token: "${APP_MP_TOKEN}"
 
 server:
-  url: https://1c27-2800-810-50c-864-69c7-9dcd-54a6-1c82.ngrok-free.app
+  url: https://b0ba-2800-810-50c-864-e470-2e8a-1ff3-89c7.ngrok-free.app
 
 # JWT
 jwt:

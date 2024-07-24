@@ -24,9 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Log4j2
 @Service
@@ -67,11 +65,24 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .failure("http://localhost:4200/home/payments") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
                 .pending("http://localhost:4200/home/payments") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
                 .build();
+        List<PreferencePaymentMethodRequest> excludedPaymentMethods = new ArrayList<>();
+        //excludedPaymentMethods.add(PreferencePaymentMethodRequest.builder().id("master").build());
+        //excludedPaymentMethods.add(PreferencePaymentMethodRequest.builder().id("amex").build());
 
+        List<PreferencePaymentTypeRequest> excludedPaymentTypes = new ArrayList<>();
+        excludedPaymentTypes.add(PreferencePaymentTypeRequest.builder().id("ticket").build());
+
+        PreferencePaymentMethodsRequest paymentMethods =
+                PreferencePaymentMethodsRequest.builder()
+                        .excludedPaymentMethods(excludedPaymentMethods)
+                        .excludedPaymentTypes(excludedPaymentTypes)
+                        .installments(3)
+                        .build();
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(Collections.singletonList(preferenceItemRequest))  // Utiliza Collections.singletonList para crear una lista con un solo elemento
                 .payer(payerRequest)
                 .backUrls(backUrlsRequest)
+                .purpose("wallet_purchase")
                 .metadata(Map.of(
                         "purchase_reference", order.getOrderReferenceExternal()  // Corregido el nombre de la clave
                 ))
@@ -81,6 +92,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .expires(true)
                 .expirationDateFrom(OffsetDateTime.now())
                 .expirationDateTo(OffsetDateTime.now().plus(Duration.ofHours(24)))
+                .paymentMethods(paymentMethods)
                 //.autoReturn("approved")
                 .build();
         Preference preference = client.create(preferenceRequest);
@@ -115,6 +127,19 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .failure("http://localhost:4200/home/payments") // <-- También se cambia la URL de fallo a la URL de respuesta genérica
                 .pending("http://localhost:4200/home/payments") // <-- También se cambia la URL de pendiente a la URL de respuesta genérica
                 .build();
+        List<PreferencePaymentMethodRequest> excludedPaymentMethods = new ArrayList<>();
+        //excludedPaymentMethods.add(PreferencePaymentMethodRequest.builder().id("master").build());
+        //excludedPaymentMethods.add(PreferencePaymentMethodRequest.builder().id("amex").build());
+
+        List<PreferencePaymentTypeRequest> excludedPaymentTypes = new ArrayList<>();
+        excludedPaymentTypes.add(PreferencePaymentTypeRequest.builder().id("ticket").build());
+
+        PreferencePaymentMethodsRequest paymentMethods =
+                PreferencePaymentMethodsRequest.builder()
+                        .excludedPaymentMethods(excludedPaymentMethods)
+                        .excludedPaymentTypes(excludedPaymentTypes)
+                        .installments(3)
+                        .build();
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .items(Collections.singletonList(preferenceItemRequest))  // Utiliza Collections.singletonList para crear una lista con un solo elemento
                 .payer(payerRequest)
@@ -128,6 +153,8 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
                 .expires(true)
                 .expirationDateFrom(OffsetDateTime.now())
                 .expirationDateTo(OffsetDateTime.now().plus(Duration.ofHours(24)))
+                .purpose("wallet_purchase")
+                .paymentMethods(paymentMethods)
                 //.autoReturn("approved")
                 .build();
         Preference preference = client.create(preferenceRequest);
