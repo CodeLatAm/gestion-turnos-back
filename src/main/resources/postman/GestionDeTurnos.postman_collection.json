@@ -1,0 +1,1457 @@
+{
+	"info": {
+		"_postman_id": "a2eadada-a9ab-4bbf-a5fc-ca140b455701",
+		"name": "GestionDeTurnos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18443499"
+	},
+	"item": [
+		{
+			"name": "registro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Abel\",\r\n    \"lastname\":\"Acevedo\",\r\n    \"title\":\"DR\",\r\n    \"username\":\"abel3581@gmail.com\",\r\n    \"password\":\"12345678\",\r\n    \"country\":\"Argentina\",\r\n    \"specialty\":\"Medico clinico\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"user2@gmail.com\",\r\n    \"password\":\"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUserSecurity",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"abel@gmail.com\",\r\n    \"username\":\"abel\",\r\n    \"password\":\"12345678\",\r\n    \"roles\":[\"USER\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/createUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"createUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpc3MiOiJUYWctU29sdXRpb24iLCJpYXQiOjE2OTcxNjc1ODAsImV4cCI6MTY5ODAzMTU4MH0.2_427YfHAa5tAnrJntH_40JxwyhK6yeMQv9HRfyrNMXtJlCiSm8KEXl6eAsz5OEgz-W7cEj6ufCG3iaB5jeTJQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/test/accessAdmin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"test",
+						"accessAdmin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updtaeProfile",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Abel\",\r\n    \"lastname\":\"Acevedo\",\r\n    \"title\":\"Dr.\",\r\n    \"domicile\":\"Garin\",\r\n    \"phone\":\"1234567890\",\r\n    \"province\":\"Buenos Aires\",\r\n    \"city\":\"Garin\",\r\n    \"whatsapp\":\"1170197183\",\r\n    \"specialty\":\"Especialidad\",\r\n    \"mat_nac\":\"112a12\",\r\n    \"mat_prov\":\"345g5\",\r\n    \"presentation\":\"Presentacion\",\r\n    \"country\":\"Argentina\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/profile/1/profile/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profile",
+						"1",
+						"profile",
+						"1"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProfileByIdUser",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/profile/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"profile",
+						"1"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCurrentUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQGdtYWlsLmNvbSIsImlzcyI6IlRhZy1Tb2x1dGlvbiIsImlhdCI6MTcwNzA2MDA0NiwiZXhwIjoxNzA3OTI0MDQ2fQ.ulk4KVgAUxp8kcm1pZOPWRJ-cuEolvdyJXReS4VTS-PQr--VGkcs2lO6vBnnfRc0Z4dpHdey5lM2K6N6ry1Kng",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createCenter",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Centro Garin\",\r\n    \"address\":\"Tortuguitas\",\r\n    \"phone\":\"11234567\",\r\n    \"email\":\"user@gmail.com\",\r\n    \"specialty\":\"Oncologia General\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/centers/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"centers",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllCentersByIdUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/centers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"centers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createHoursAtencion",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"centerName\": \"Centro Garin\",\r\n    \"day\": \"LUNES\",\r\n    \"startTime\": \"10:30:00\",\r\n    \"endTime\": \"18:00:00\"\r\n    \r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/days/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"days",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllCentersName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/centers/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"centers",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllBusinessHoursByCenterName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/days/centerName?centerName=Centro Tortuguitas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"days",
+						"centerName"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro Tortuguitas"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "paginacion",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/schedules/paged?paged=0&size=7&centerName=Centro Garinn&startDate=2024-01-10&endDate=2024-12-10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"schedules",
+						"paged"
+					],
+					"query": [
+						{
+							"key": "paged",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "7"
+						},
+						{
+							"key": "centerName",
+							"value": "Centro Garinn"
+						},
+						{
+							"key": "startDate",
+							"value": "2024-01-10"
+						},
+						{
+							"key": "endDate",
+							"value": "2024-12-10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/dates?userId=1&centerName=Centros&page=0&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"dates"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "centerName",
+							"value": "Centros"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createPatients",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Juan\",\r\n  \"surname\": \"Pérez\",\r\n  \"healthInsurance\": \"ObraSocialXYZ\",\r\n  \"genre\": \"Masculino\",\r\n  \"plan\": \"PlanB\",\r\n  \"affiliateNumber\": \"123456\",\r\n  \"dateOfBirth\": \"1990-01-01\", // Ajusta la fecha según sea necesario\r\n  \"cellphone\": \"123456789\",\r\n  \"landline\": \"987654321\",\r\n  \"nationality\": \"Argentina\",\r\n  \"province\": \"Buenos Aires\",\r\n  \"address\": \"Calle 123\",\r\n  \"profession\": \"Médico\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"dni\": \"12345678\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/patients/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllPatients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/term?term",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"term"
+					],
+					"query": [
+						{
+							"key": "term",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllTurnsByCenterName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/center-name-userId?centerName=Centro tortuguitas&userId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"center-name-userId"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro tortuguitas"
+						},
+						{
+							"key": "userId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTurnByCenterAndDateAndHour",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/turn-by-cdh?centerName=Centro tortuguitas&date=2024-02-01&hour=9:00",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"turn-by-cdh"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro tortuguitas"
+						},
+						{
+							"key": "date",
+							"value": "2024-02-01"
+						},
+						{
+							"key": "hour",
+							"value": "9:00"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTunById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/17",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"17"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "crear turno paciente",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/create?centerName=Centro Garin&date=2024-02-15&hour=9:00&dni=28881785&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"create"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro Garin"
+						},
+						{
+							"key": "date",
+							"value": "2024-02-15"
+						},
+						{
+							"key": "hour",
+							"value": "9:00"
+						},
+						{
+							"key": "dni",
+							"value": "28881785"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "busca los turnos por centro, userId y dia",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/days/business-hours?centername&userId&day",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"days",
+						"business-hours"
+					],
+					"query": [
+						{
+							"key": "centername",
+							"value": null
+						},
+						{
+							"key": "userId",
+							"value": null
+						},
+						{
+							"key": "day",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Busca los horarios por centro y userId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/days/business-hours?centerName=Centro Tortuguitas&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"days",
+						"business-hours"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro Tortuguitas"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "day",
+							"value": "Viernes",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Paginar por centro y usuario",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/page-term?userId=1&centerName=Centro Tortugas&term=24&page=0&size=4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"page-term"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "centerName",
+							"value": "Centro Tortugas"
+						},
+						{
+							"key": "term",
+							"value": "24",
+							"description": "\n"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/centers/total-patients?userId=2&centerName=Centro Garin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"centers",
+						"total-patients"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "2"
+						},
+						{
+							"key": "centerName",
+							"value": "Centro Garin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all total patients by userId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/total-patients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"total-patients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "totalCentersByUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/centers/total-centers?userId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"centers",
+						"total-centers"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllTurnsByUserid",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/all-by-user?userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"all-by-user"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "chang status turn",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/change-status?turnId=11&status=CANCELADO",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"change-status"
+					],
+					"query": [
+						{
+							"key": "turnId",
+							"value": "11"
+						},
+						{
+							"key": "status",
+							"value": "CANCELADO"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Busca por idPatient y UserId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/patient-by-id-and-user-id?patientId=1&userId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"patient-by-id-and-user-id"
+					],
+					"query": [
+						{
+							"key": "patientId",
+							"value": "1"
+						},
+						{
+							"key": "userId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar paciente",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Juan\",\r\n  \"surname\": \"Pérez\",\r\n  \"healthInsurance\": \"Obra Social XYZ\",\r\n  \"genre\": \"Masculino\",\r\n  \"plan\": \"Plan ABC\",\r\n  \"affiliateNumber\": \"123456789\",\r\n  \"dateOfBirth\": \"1990-05-15\",\r\n  \"cellphone\": \"1234567890\",\r\n  \"landline\": \"1123456789\",\r\n  \"nationality\": \"Argentina\",\r\n  \"province\": \"Buenos Aires\",\r\n  \"address\": \"Calle Falsa 123\",\r\n  \"profession\": \"Ingeniero\",\r\n  \"email\": \"juan@example.com\",\r\n  \"dni\": \"12345678\",\r\n  \"age\": \"30\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/patients/update-patient?patientId=1&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"update-patient"
+					],
+					"query": [
+						{
+							"key": "patientId",
+							"value": "1"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agrega historia clinica al paciente",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"centerName\": \"Centro Garin\",\r\n    \"localDate\": \"2023-02-21\",\r\n    \"reasonForConsultation\": \"Motivo de la consulta\",\r\n    \"background\": \"Antecedentes\",\r\n    \"physicalExam\": \"Examen Fisico\",\r\n    \"complementaryStudies\": \"Estudios complementarios\",\r\n    \"observations\": \"Observasiones\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/clinic-history/add-patient?patientId=1&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"clinic-history",
+						"add-patient"
+					],
+					"query": [
+						{
+							"key": "patientId",
+							"value": "1"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll clinic history",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/clinic-history/getAll?patientId=1&centerName=Centro Garin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"clinic-history",
+						"getAll"
+					],
+					"query": [
+						{
+							"key": "patientId",
+							"value": "1"
+						},
+						{
+							"key": "centerName",
+							"value": "Centro Garin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getByIdPatient",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Borrar historia clinica",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "buscar pacientes por centro o termino",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/search?centerName=Centro Garin&userId=1&term=abe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"search"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro Garin"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "term",
+							"value": "abe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "searchPatientsByCenterNameAndUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/search-patients?centerName=Centro Garin&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"search-patients"
+					],
+					"query": [
+						{
+							"key": "centerName",
+							"value": "Centro Garin"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filtersPatients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/filters",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"filters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTotalGenders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/get-total-genders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"get-total-genders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleted patient by center",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/centers/delete-patient?userId=1&centerName=Centro Tortugas&patientId=9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"centers",
+						"delete-patient"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "centerName",
+							"value": "Centro Tortugas"
+						},
+						{
+							"key": "patientId",
+							"value": "9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deletedCenterById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/centers/delete-center/7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"centers",
+						"delete-center",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deletePatientById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/delete/patient/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"delete",
+						"patient",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "uploadImage",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"contentType": "",
+							"type": "file",
+							"src": "/C:/Users/abel_/OneDrive/Imágenes/Álbum de cámara/abel-copia.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/images/upload/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"images",
+						"upload",
+						"1"
+					],
+					"query": [
+						{
+							"key": "file",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/images/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"images",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteBusinessHours",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/days/24/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"days",
+						"24",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllTurnsByFilters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/turns/search-turns?date=Próximos 7 días&dni=28881785&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"turns",
+						"search-turns"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "Próximos 7 días"
+						},
+						{
+							"key": "dni",
+							"value": "28881785"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"date\": \"2024-05-19\",\r\n    \"paymentEnum\":\"PENDIENTE\",\r\n    \"description\":\"description\",\r\n    \"total\":3000.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/payments/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"payments",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "crea orden de pago",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "notificacion mercado pago",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "getstatusUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/1/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllPayments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/vouchers/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"vouchers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updatePaymentsList",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/vouchers/update?voucherId=32&userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"vouchers",
+						"update"
+					],
+					"query": [
+						{
+							"key": "voucherId",
+							"value": "32"
+						},
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
